@@ -7,7 +7,7 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import IconButton from '@material-ui/core/IconButton'
 import Iframe from 'react-iframe'
 import GetAppIcon from '@material-ui/icons/GetApp'
-import Modal from 'react-bootstrap/modal'
+import Modal from 'react-bootstrap/Modal'
 import AddIcon from '@material-ui/icons/Add'
 
 

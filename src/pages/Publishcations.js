@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { DataGrid, GridToolbar } from '@material-ui/data-grid'
 import DeleteIcon from '@material-ui/icons/Delete'
-import Modal from 'react-bootstrap/modal'
+import Modal from 'react-bootstrap/Modal'
 import AddIcon from '@material-ui/icons/Add'
 import Button from '@material-ui/core/Button'
 import IconButton from '@material-ui/core/IconButton'
