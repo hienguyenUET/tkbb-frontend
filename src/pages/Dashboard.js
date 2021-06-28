@@ -172,7 +172,7 @@ const Dashboard = props => {
               </div>
               <div>
                 <Iframe
-                  url="http://localhost:3030/queues/queue/crawlGS"
+                  url="http://112.137.129.214:35280/queues/queue/crawlGS"
                   width="100%"
                   height="450px"
                   display="initial"
