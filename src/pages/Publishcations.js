@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import { DataGrid, GridToolbar } from '@material-ui/data-grid'
 import DeleteIcon from '@material-ui/icons/Delete'
 import Modal from 'react-bootstrap/Modal'
@@ -6,22 +6,26 @@ import AddIcon from '@material-ui/icons/Add'
 import Button from '@material-ui/core/Button'
 import IconButton from '@material-ui/core/IconButton'
 
-import { createPublishcation, getPublishcation, deletePublishcation, updatePublishcation } from '../api';
+import { createPublishcation, getPublishcation, deletePublishcation, updatePublishcation, getCategories } from '../api';
 
 
 const Publishcations = props => {
-  const [rows, setRows] = useState([])
-  const [show, setShow] = useState(false);
+  let [rows, setRows] = useState([])
+  let [categories, setCategories] = useState([]);
+  let [show, setShow] = useState(false);
 
-  const cNameRef = useRef('')
-  const cPointRef = useRef('')
-  const cPubTypeRef = useRef('journal')
-
+  let [name, setName] = useState();
+  let [description, setDescription] = useState();
+  let [categoryId, setCategoryId] = useState();
 
   const reloadTable = async () => {
     const { data: pub } = await getPublishcation()
 
     setRows(pub)
+  }
+  const reloadCategories = async () => {
+    const { data: categories } = await getCategories()
+    setCategories(categories);
   }
 
   const handleEditCellChangeCommitted = React.useCallback(
@@ -51,27 +55,27 @@ const Publishcations = props => {
       },
     },
     {
-      field: 'type',
-      headerName: 'Type',
+      field: 'category',
+      headerName: 'Category',
       width: 200,
-      editable: true,
+      editable: false,
       renderCell: (params) => {
         return (
           <div>
-            {params.getValue('type')}
+            {params.getValue('category').name}
           </div>
         )
       },
     },
     {
-      field: 'point',
-      headerName: 'Point',
-      width: 200,
-      editable: true,
+      field: 'KPI',
+      headerName: 'KPI',
+      width: 100,
+      editable: false,
       renderCell: (params) => {
         return (
           <div>
-            {params.getValue('point')}
+            {params.getValue('category').researchHours}
           </div>
         )
       },
@@ -96,6 +100,7 @@ const Publishcations = props => {
 
   useEffect(() => {
     reloadTable()
+    reloadCategories()
   }, [])
 
   const handleClose = () => setShow(false)
@@ -103,9 +108,7 @@ const Publishcations = props => {
 
   const handleCreate = async () => {
     const body = {
-      name: cNameRef.current.value,
-      point: cPointRef.current.value,
-      type: cPubTypeRef.current.value,
+      name, description, categoryId
     }
 
     await createPublishcation(body)
@@ -150,21 +153,25 @@ const Publishcations = props => {
                           className="form-control m-1"
                           placeholder="Name"
                           type="text"
-                          ref={cNameRef}
+                          value={name}
+                          onChange={(event) => setName(event.target.value)}
                         />
                         <input
                           className="form-control m-1"
-                          placeholder="Point"
-                          type="Number"
-                          ref={cPointRef}
+                          placeholder="Description"
+                          type="text"
+                          value={description}
+                          onChange={(event) => setDescription(event.target.value)}
                         />
                         <select
                           className="browser-default custom-select form-control m-1"
-                          ref={cPubTypeRef}
+                          value={categoryId}
+                          onChange={(event) => setCategoryId(event.target.value)}
                         >
-                          <option value="journal">Journal</option>
-                          <option value="conference">Conference</option>
+                          <option value="">-- Select a Category --</option>
+                          { categories.map(c => (<option value={c.id}>{c.name}</option>)) }
                         </select>
+                        -{categoryId}-
                       </div>
                     </Modal.Body>
                     <Modal.Footer>

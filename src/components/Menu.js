@@ -29,8 +29,8 @@ const Menu = props => {
            with font-awesome or any other icon font library */}
               <li className="nav-item">
                 <A href="/dashboard" className="nav-link">
-                  <i className="nav-icon fas fa-tachometer-alt" />
-                  <p>Dashboard</p>
+                  <i className="nav-icon fas fa-users" />
+                  <p>Scholars</p>
                 </A>
               </li>
               <li className="nav-item">
@@ -42,11 +42,35 @@ const Menu = props => {
                 </A>
               </li>
               <li className="nav-item">
+                <A href="/junk" className="nav-link">
+                  <i className="nav-icon fas fa-bug" />
+                  <p>
+                    Errors
+                  </p>
+                </A>
+              </li>
+              {/*
+              <li className="nav-item">
                 <A href="/publishcations" className="nav-link">
                   <i className="nav-icon fas fa-globe" />
                   <p>
-                    Publishcations
+                    Publications
                   </p>
+                </A>
+              </li>
+              */}
+              <li className="nav-item">
+                <A href="/category" className="nav-link">
+                  <i className="nav-icon fas fa-layer-group" />
+                  <p>
+                    Cagegory
+                  </p>
+                </A>
+              </li>
+              <li className="nav-item">
+                <A href="/jobs" className="nav-link">
+                  <i className="nav-icon fas fa-tachometer-alt" />
+                  <p>Job tracking</p>
                 </A>
               </li>
             </ul>

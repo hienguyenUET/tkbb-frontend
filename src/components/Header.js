@@ -11,7 +11,7 @@ const Header = props => {
         {/* Left navbar links */}
         <ul className="navbar-nav">
           <li className="nav-item">
-            <A className="nav-link" data-widget="pushmenu" href="/" role="button"><i className="fas fa-bars" /></A>
+            <A className="nav-link" data-widget="pushmenu" href="" role="button"><i className="fas fa-bars" /></A>
           </li>
           <li className="nav-item d-none d-sm-inline-block">
             <A href="/" className="nav-link">Home</A>

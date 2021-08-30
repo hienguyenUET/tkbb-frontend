@@ -41,7 +41,7 @@ instance.interceptors.response.use(
         }
 
         if (error.response?.status) {
-            localStorage.removeItem('token')
+//            localStorage.removeItem('token')
         }
 
         toast.dismiss(loadingToastId)
@@ -77,7 +77,7 @@ const getUsers = async () => {
 
     const { data: response } = await instance.get('/api/v1/users')
 
-    return response
+    return response;
 }
 
 const uploadUsers = async (file) => {
@@ -103,6 +103,16 @@ const deleteUser = async (uid) => {
     return response
 }
 
+const deleteArticle = async (aid) => {
+    const { data: response } = await instance.delete(`/api/v1/articles/${aid}`);
+    return response;
+}
+
+const reloadArticle = async (aid) => {
+    const { data: response } = await instance.get(`/api/v1/articles/reload/${aid}`);
+    return response;
+}
+
 const crawArticleData = async () => {
     const { data: response } = await instance.post('/api/v1/articles/crawling')
 
@@ -118,37 +128,37 @@ const getArticles = async () => {
 const updateArticles = async (body, id) => {
     const { data: response } = await instance.put(`/api/v1/articles/${id}`, body)
     
-    toast.success("Update publishcation for article successfully", { autoClose: 3000 })
+    toast.success("Update diachicongbo for article successfully", { autoClose: 3000 })
 
     return response
 }
 
 const createPublishcation = async (body) => {
-    const { data: response } = await instance.post('/api/v1/publishcation', body)
+    const { data: response } = await instance.post('/api/v1/diachicongbo', body)
 
-    toast.success("Create publishcation successfully", { autoClose: 3000 })
+    toast.success("Create diachicongbo successfully", { autoClose: 3000 })
     
     return response
 }
 
 const getPublishcation = async () => {
-    const { data: response } = await instance.get('/api/v1/publishcation')
+    const { data: response } = await instance.get('/api/v1/diachicongbo')
     
     return response
 }
 
 const deletePublishcation = async (id) => {
-    const { data: response } = await instance.delete(`/api/v1/publishcation/${id}`)
+    const { data: response } = await instance.delete(`/api/v1/diachicongbo/${id}`)
     
-    toast.success("Delete publishcation successfully", { autoClose: 3000 })
+    toast.success("Delete diachicongbo successfully", { autoClose: 3000 })
 
     return response
 }
 
 const updatePublishcation = async (body, id) => {
-    const { data: response } = await instance.put(`/api/v1/publishcation/${id}`, body)
+    const { data: response } = await instance.put(`/api/v1/diachicongbo/${id}`, body)
 
-    toast.success("Update publishcation successfully", { autoClose: 3000 })
+    toast.success("Update diachicongbo successfully", { autoClose: 3000 })
     
     return response
 }
@@ -159,11 +169,45 @@ const crawlUsers = async (id) => {
     return response
 }
 
+const updateUser = async (id, user) => {
+    const { data: response } = await instance.put(`/api/v1/users/${id}`, user);
+    return response;
+}
+
+const getJunks = async () => {
+    const { data: response } = await instance.get(`/api/v1/junk`);
+    return response;
+}
+
+const deleteJunk = async (citation) => {
+    const { data: response } = await instance.delete(`/api/v1/junk/${citation}`);
+    return response;
+}
+
+const createCategory = async (category) => {
+    const { data: response } = await instance.post(`/api/v1/category`, category);
+    return response;
+}
+const getCategories = async () => {
+    const { data: response } = await instance.get('/api/v1/category');
+    return response;
+}
+const updateCategory = async (id, category) => {
+    const { data: response } = await instance.put(`/api/v1/category/${id}`, category);
+    return response;
+}
+const deleteCategory = async (id) => {
+    const { data: response } = await instance.delete(`/api/v1/category/${id}`);
+    return response;
+}
+
 export {
     login,
     getUsers,
     uploadUsers,
     deleteUser,
+    deleteArticle,
+    reloadArticle,
     crawArticleData,
     getArticles,
     createPublishcation,
@@ -172,5 +216,12 @@ export {
     updateArticles,
     updatePublishcation,
     createUsers,
+    updateUser,
     crawlUsers,
+    getJunks,
+    deleteJunk,
+    getCategories,
+    deleteCategory,
+    updateCategory,
+    createCategory
 }

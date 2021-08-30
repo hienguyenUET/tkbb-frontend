@@ -4,18 +4,20 @@ import { DataGrid, GridToolbar } from '@material-ui/data-grid'
 import Button from '@material-ui/core/Button'
 import CloudUploadIcon from '@material-ui/icons/CloudUpload'
 import DeleteIcon from '@material-ui/icons/Delete'
+import EditIcon from '@material-ui/icons/Edit'
+import AddIcon from '@material-ui/icons/Add'
+import BugReportOutlined from '@material-ui/icons/BugReportOutlined';
 import IconButton from '@material-ui/core/IconButton'
-import Iframe from 'react-iframe'
+
 import GetAppIcon from '@material-ui/icons/GetApp'
 import Modal from 'react-bootstrap/Modal'
-import AddIcon from '@material-ui/icons/Add'
 
-
-import { getUsers, uploadUsers, deleteUser, crawArticleData, createUsers, crawlUsers} from '../api'
+import { getUsers, uploadUsers, deleteUser, updateUser, crawArticleData, createUsers, crawlUsers} from '../api'
 
 
 const Dashboard = props => {
   const [userRows, setUserRows] = useState([])
+  const [showError, setShowError] = useState(false);
   const userFileRef = useRef('')
   const cFacultyRef = useRef('')
   const cFullnameRef = useRef('')
@@ -23,12 +25,18 @@ const Dashboard = props => {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false)
-  const handleShow = () => setShow(true)
+  const handleShow = () => {
+    cFullnameRef.current = "Hooooo";
+    setShow(true)
+  }
 
   const reloadUser = async () => {
     const { data: users } = await getUsers()
-
-    setUserRows(users)
+    console.log(showError);
+    if (showError) 
+      setUserRows(users.filter(u => (u.crawlStatus && u.crawlStatus.length)));
+    else 
+      setUserRows(users)
   }
 
   const handleCreate = async () => {
@@ -48,14 +56,30 @@ const Dashboard = props => {
     {
       field: 'faculty',
       headerName: 'Faculty',
-      editable: true,
-      width: 160,
+      editable: false,
+      renderCell: (params) => (
+        <div style={{width: '100%', overflow:' hidden', textOverflow: 'ellipsis'}} 
+          title={params.getValue('faculty')}>{params.getValue('faculty')}
+        </div>
+      ),
+      width: 120,
     },
     {
       field: 'fullName',
       headerName: 'Full name',
-      editable: true,
-      width: 160,
+      renderCell: (params) => {
+        let crawlStatus = params.getValue('crawlStatus');
+        return (<div style={{
+            width: '100%', 
+            overflow:' hidden', 
+            textOverflow: 'ellipsis', 
+            color: (crawlStatus && crawlStatus.length)?'red':'inherit'
+          }} 
+          title={(crawlStatus && crawlStatus.length)?crawlStatus:params.getValue('fullName')}>{params.getValue('fullName')}
+        </div>)
+      },
+      editable: false,
+      width: 180,
     },
     {
       field: 'gsUrl',
@@ -102,6 +126,10 @@ const Dashboard = props => {
             >
               <DeleteIcon />
             </IconButton>
+            <IconButton 
+              onClick={() => console.log("Edit", params.getValue('id'))}>
+                <EditIcon />
+            </IconButton>
           </div>
         )
       },
@@ -110,7 +138,7 @@ const Dashboard = props => {
 
   useEffect(() => {
     reloadUser()
-  }, [])
+  })
 
   const handleUploadUserFile = async () => {
     await uploadUsers(userFileRef.current.files[0])
@@ -123,13 +151,20 @@ const Dashboard = props => {
   }
 
   const handleCrawl = async (id) => {
-    await crawlUsers(id)
+    await crawlUsers(id);
+    await reloadUser()
   }
 
   const handleCrawlArticle = async () => {
     await crawArticleData()
   }
+  const handleCellChanged = ({id, field, props}) => {
+    const body = {}
+    body[field] = props.value
 
+    updateUser(id, body)
+      .finally(() => reloadUser())
+  }
   return (
     <div>
       <div className="content-wrapper">
@@ -138,12 +173,12 @@ const Dashboard = props => {
           <div className="container-fluid">
             <div className="row mb-2">
               <div className="col-sm-6">
-                <h1 className="m-0">Dashboard</h1>
+                <h1 className="m-0">Scholars</h1>
               </div>
               <div className="col-sm-6">
                 <ol className="breadcrumb float-sm-right nav-links">
                   <li className="breadcrumb-item"><A href="/" >Home</A></li>
-                  <li className="breadcrumb-item active">Dashboard</li>
+                  <li className="breadcrumb-item active">Scholars</li>
                 </ol>
               </div>
             </div>
@@ -154,9 +189,6 @@ const Dashboard = props => {
           <div className="container-fluid">
             <div>
               <div className="d-flex justify-content-between align-items-center m-1">
-                <div>
-                  <h4>Job queue</h4>
-                </div>
                 <div>
                   <Button
                     variant="contained"
@@ -170,18 +202,6 @@ const Dashboard = props => {
                 </Button>
                 </div>
               </div>
-              <div>
-                <Iframe
-                  url="http://112.137.129.214:35280/queues/queue/crawlGS"
-                  width="100%"
-                  height="450px"
-                  display="initial"
-                  position="relative"
-                />
-              </div>
-            </div>
-
-            <div>
               <div className="d-flex justify-content-between align-items-center m-1">
                 <div>
                   <h4>Authors</h4>
@@ -199,19 +219,26 @@ const Dashboard = props => {
                     size="small"
                     startIcon={<CloudUploadIcon />}
                     onClick={handleUploadUserFile}
-                  >
-                    UPLOAD
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="small"
-                  className="ml-1"
-                  startIcon={<AddIcon />}
-                  onClick={handleShow}
-                >
-                  Create
-                </Button>
+                  >UPLOAD
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    size="small"
+                    className="ml-1"
+                    startIcon={<AddIcon />}
+                    onClick={handleShow}
+                  >Create
+                  </Button>
+                  <Button 
+                    variant="contained" 
+                    className="ml-1"
+                    size="small"
+                    color={showError?"primary":"secondary"}
+                    startIcon={<BugReportOutlined />}
+                    onClick={async () => {await setShowError(!showError);await reloadUser();}}>
+                    {showError?"Show Error":"Show All"}
+                  </Button>
                 </div>
               </div>
 
@@ -219,10 +246,11 @@ const Dashboard = props => {
                 <DataGrid
                   rows={userRows}
                   columns={userColumns}
-                  pageSize={10}
+                  pageSize={30}
                   components={{
                     Toolbar: GridToolbar
                   }}
+                  onEditCellChangeCommitted={handleCellChanged}
                 />
               </div>
 
