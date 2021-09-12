@@ -1,26 +1,78 @@
 import React, { useEffect, useState } from 'react'
 import { A } from 'hookrouter'
-import { DataGrid, GridToolbar } from '@material-ui/data-grid'
+import toast from '../toast'
+import DataGrid from '../components/DataGrid';
 import DeleteIcon from '@material-ui/icons/Delete'
 import SearchIcon from '@material-ui/icons/Search'
+import CheckIcon from '@material-ui/icons/CheckSharp'
 import CachedOutlinedIcon from '@material-ui/icons/CachedOutlined'
 import IconButton from '@material-ui/core/IconButton'
-import { deleteArticle, reloadArticle, getArticles, updateArticles, getCategories } from '../api'
+import { deleteArticle, reloadArticle, getArticles, updateArticles, getCategories, findJournal } from '../api'
 
 const Article = props => {
+  let [articles, setArticles] = useState([]);
   const [rows, setRows] = useState([]);
+  const [page, setPage] = useState(0);
+  let [searchText, setSearchText] = useState('');
   let [filterModel, setFilterModel] = useState({items: []});
 
   let [categories, setCategories] = useState([]);
+  
+  const checkPublication = async (venue) => {
+    let { data: checkResults } = await findJournal(venue);
+    let newRows = rows.map(r => ((r.venue === venue)?Object.assign({}, r, checkResults):r));
+    setRows(newRows);
+  }
+  function escapeRegExp(value) {
+    return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+  }
+
+  const requestSearch = (searchValue) => {
+    setSearchText(searchValue);
+    const searchRegex = new RegExp(escapeRegExp(searchValue), 'i');
+    const filteredRows = articles.filter((row) => {
+      return Object.keys(row).some((field) => {
+        return searchRegex.test(('' + row[field]));
+      });
+    });
+    setRows(filteredRows);
+  };
+
+  const handleCellChanged = ({id, field, props}) => {
+    const body = {}
+    let value = props.value;
+    if (field === 'publicationDate') {
+      let v = Date.parse(props.value);
+      if (isNaN(v)) {
+        setRows(rows.map(r => r));
+        return toast.error(
+            'Wrong date format. Should be "yyyy/mm/dd"',
+            { autoClose: 3000 }
+        );
+      }
+    }
+    let row = rows.find(r => r.id === id);
+    row[field] = value;
+    body[field] = value
+    updateArticles(body, id);
+    setRows(rows.map(r => r));
+  }
 
   const categoryChanged = (event) => {
     let articleId = +event.target.dataset.params_id;
     let row = rows.find(r => r.id === articleId);
     row.categoryId = +event.target.value;
-    updateArticles({categoryId: row.categoryId}, articleId);
+    row.classified = true;
+    updateArticles({categoryId: row.categoryId, classified: true}, articleId);
     setRows(rows.map(r => r));
   }
 
+  const toggleConfirm = (articleId, classified) => {
+    let row = rows.find(r => r.id === articleId);
+    row.classified = !classified;
+    updateArticles({classified: row.classified}, articleId);
+    setRows(rows.map(r => r));
+  }
   const handleRefreshArticle = async (id) => {
     await reloadArticle(id);
     await reloadTable()
@@ -32,13 +84,32 @@ const Article = props => {
   }
 
   const reloadTable = async () => {
-    const { data: articles } = await getArticles()
-    setRows(articles)
+    const { data } = await getArticles();
+    setArticles(data);
+    setRows(data);
   }
 
   const getCates = async () => {
     const { data: categories } = await getCategories()
     setCategories(categories)
+  }
+
+  const defaultStyle = {
+    color: 'white',
+    display: 'inline-block',
+    lineHeight: '24px',
+    verticalAlign: 'middle',
+    borderRadius: '4px',
+    padding: '0 0.5em',
+    margin: '0 3px'
+  }
+  const negativeStyle = {
+    backgroundColor: '#ccc',
+    border: '1px solid #ccc',
+  }
+  const positiveStyle = {
+    backgroundColor: '#080',
+    border: '1px solid #080',
   }
 
   const columns = [
@@ -49,24 +120,19 @@ const Article = props => {
       width: 180
     },
     {
-      field: 'authors',
-      headerName: 'Authors Count',
-      width: 70,
-      renderCell: (params) => {
-        return (
-          <div>
-            {params.getValue('authors').split(',').length}
-          </div>
-        )
-      },
-    },
-    {
       field: 'title',
       headerName: 'Title',
       width: 260,
       renderCell: (params) => {
         return (
           <div>
+            <IconButton onClick={() => {
+              setFilterModel({
+                items: [{columnField: 'title', operatorValue: 'equals', value: params.getValue('title')}]
+              })
+            }}>
+              <SearchIcon />
+            </IconButton>
             <a
               target="_blank"
               rel="noreferrer"
@@ -81,23 +147,14 @@ const Article = props => {
       },
     },
     {
-      field: 'publicationDate',
-      headerName: 'Publication Date',
-      width: 140
-    },
-    {
-      field: 'citedCount',
-      headerName: 'Cited',
-      width: 100,
-    },
-    {
       headerName: 'Category',
       field: 'category',
       width: 200,
       sortable: false,
       renderCell: (params) => {
         return (
-          <select style={{width: '100%', border: 'none', height: '80%', color: (+params.getValue('categoryId') > 1)?'green':'red'}} data-params_id={params.getValue('id')} 
+          <select style={{width: '100%', border: 'none', height: '80%', color: params.getValue('classified')?'green':'red'}} 
+            data-params_id={params.getValue('id')} 
             value={params.getValue('categoryId')}
             onChange={categoryChanged}>
             { categories.map(c => (<option value={c.id}>{c.name}</option>)) }
@@ -106,18 +163,56 @@ const Article = props => {
       },
     },
     {
+      headerName: 'Confirm',
+      field: 'classified',
+      width: 100,
+      sortable: false,
+      renderCell: (params) => {
+        return (
+          <IconButton onClick={() => toggleConfirm(params.getValue('id'), params.getValue('classified'))}
+            style={params.getValue('classified')?{color:"green"}:{color: "#ccc"}}>
+            <CheckIcon />
+          </IconButton>
+        )
+      },
+    },
+    {
+      field: 'publicationDate',
+      editable: true,
+      headerName: 'Publication Date',
+      width: 140
+    },
+    {
       field: 'venue',
       headerName: 'Publication',
-      width: 450,
+      editable: true,
+      width: 650,
       renderCell: (params) => {
         return (
           <div style={{width: '100%', overflow:'hidden', textOverflow: 'ellipsis'}}>
-            <IconButton color="primary" onClick={() => setFilterModel({
-                items: [{columnField: 'venue', operatorValue: 'equals', value: params.getValue('venue')}]
-            })}>
+            <IconButton color="primary" onClick={() => {
+              setFilterModel({
+                  items: [{columnField: 'venue', operatorValue: 'equals', value: params.getValue('venue')}]
+              })
+            }}>
               <SearchIcon />
             </IconButton>
-            <a href={encodeURI(`https://www.scimagojr.com/journalsearch.php?q=${params.getValue('venue')}`)} target="_blank" rel="noreferrer">{params.getValue('venue')}</a>
+            <a style={{
+                backgroundColor: '#E77642',
+                border: '1px solid #E77642',
+                borderRadius: '4px',
+                ...defaultStyle
+              }}
+              href={encodeURI(`https://www.scimagojr.com/journalsearch.php?q=${params.getValue('venue')}`)} 
+              target="_blank" rel="noreferrer">SCJ
+            </a>
+            <button style={params.getValue('isISI')?{...defaultStyle,...positiveStyle}:{...defaultStyle, ...negativeStyle}} 
+              onClick={() => checkPublication(params.getValue('venue'))}>ISI
+            </button>
+            <button style={params.getValue('isSCOPUS')?{...defaultStyle,...positiveStyle}:{...defaultStyle, ...negativeStyle}}
+              onClick={() => checkPublication(params.getValue('venue'))}>SCOPUS
+            </button>
+            {params.getValue('venue')}
           </div>
         )
       },
@@ -130,6 +225,23 @@ const Article = props => {
             {params.getValue('publisher')}
           </div>
         )
+    },
+    {
+      field: 'authors',
+      headerName: 'Authors Count',
+      width: 70,
+      renderCell: (params) => {
+        return (
+          <div>
+            {params.getValue('authors').split(',').length}
+          </div>
+        )
+      },
+    },
+    {
+      field: 'citedCount',
+      headerName: 'Cited',
+      width: 100,
     },
     {
       field: 'actions',
@@ -175,18 +287,24 @@ const Article = props => {
 
         <section className="content">
           <div className="container-fluid">
-
             <div>
-
               <div style={{ height: 700, width: '100%', backgroundColor: '#fff' }}>
                 <DataGrid
                   rows={rows}
                   columns={columns}
-                  pageSize={30}
-                  components={{
-                    Toolbar: GridToolbar
-                  }}
+                  pageSize={10}
                   filterModel={filterModel}
+                  onFilterModelChange={(params) => {
+                    console.log(params);
+                    params.api.setPage(0);
+                  }}
+                  clearSearchTextFn={() => requestSearch('')}
+                  clearFilterFn={() => {
+                    setFilterModel({items:[]})
+                  }}
+                  filterText={searchText}
+                  filterTextChangeFn={(event) => requestSearch(event.target.value)}
+                  onEditCellChangeCommitted={handleCellChanged}
                 />
               </div>
             </div>

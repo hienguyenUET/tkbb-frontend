@@ -17,7 +17,7 @@ const Login = props => {
       username: usernameRef.current.value,
       password: passwordRef.current.value,
     })
-
+    authContext.setUsername(usernameRef.current.value);
     authContext.login(token)
   }
 

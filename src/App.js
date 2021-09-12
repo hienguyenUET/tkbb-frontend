@@ -11,9 +11,13 @@ import Footer from './components/Footer'
 import Login from './pages/Login'
 import NotFound from './pages/NotFound'
 import Articles from './pages/Article'
-import Publishcations from './pages/Publishcations'
+//import Publishcations from './pages/Publishcations'
 import Category from './pages/Category'
+import Report from './pages/Report'
 import BlankPage from './pages/BlankPage'
+import Update from './pages/Update'
+import Overview from './pages/Overview'
+import Yearly from './pages/Yearly'
 
 import { AuthContext } from './context'
 
@@ -27,8 +31,12 @@ const routes = {
   // '/login': () => <Login />,
   '/articles': () => <Articles />,
   '/junk': () => <Junk />,
-  '/publishcations': () => <Publishcations />,
-  '/category': () => <Category />
+  //'/publishcations': () => <Publishcations />,
+  '/category': () => <Category />,
+  '/report': () => <Report />,
+  '/update': () => <Update />,
+  '/overview': () => <Overview />,
+  '/yearly': () => <Yearly />
 }
 
 const App = props => {
@@ -38,24 +46,27 @@ const App = props => {
   const [token, setToken] = useState(null)
 
   const login = async (jwt) => {
-    setToken(jwt)
-
-    localStorage.setItem(
-      'token',
-      jwt,
-    )
+    setToken(jwt);
+    localStorage.setItem('token', jwt);
   }
 
   const logout = () => {
-    setToken(null)
+    setToken(null);
+    localStorage.removeItem('token');
+    localStorage.remoteItem('username');
   }
-
+  const setUsername = (username) => {
+    localStorage.setItem('username', username);
+  }
+  const getUsername = () => {
+    return localStorage.getItem('username');
+  }
   useEffect(() => {
     login(localStorage.getItem('token'))
   }, [])
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn: !!token, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn: !!token, login, logout, setUsername, getUsername }}>
       {
         token ? 
         <div className="wrapper">
