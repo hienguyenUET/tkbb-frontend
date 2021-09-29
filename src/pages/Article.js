@@ -85,8 +85,9 @@ const Article = props => {
 
   const reloadTable = async () => {
     const { data } = await getArticles();
-    setArticles(data);
-    setRows(data);
+    const dataRows = data.map(r => ({...r, categoryName: r.category.name }));
+    setArticles(dataRows);
+    setRows(dataRows);
   }
 
   const getCates = async () => {
@@ -148,7 +149,7 @@ const Article = props => {
     },
     {
       headerName: 'Category',
-      field: 'category',
+      field: 'categoryName',
       width: 200,
       sortable: false,
       renderCell: (params) => {
