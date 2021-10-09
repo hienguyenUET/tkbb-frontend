@@ -1,5 +1,7 @@
 import { GridToolbar } from '@material-ui/data-grid'
 import Button from '@material-ui/core/Button'
+import Switch from '@material-ui/core/Switch'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
 import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
 import DeleteSweepOutlinedIcon from '@material-ui/icons/DeleteSweepOutlined'
@@ -20,6 +22,8 @@ function MyGridToolbar(props) {
     <IconButton onClick={props.clearSearchText}>
       <CloseIcon />
     </IconButton>
+    <FormControlLabel style={{marginBottom: 0}} control={<Switch checked={props.confirmed} onChange={props.toggleConfirmed} color="primary" />} label="Confirmed" />
+    <FormControlLabel style={{marginBottom: 0}} control={<Switch checked={props.classified} onChange={props.toggleClassified} color="primary" />} label="Classified" />
     <Button size="small" onClick={ props.clearFilter }>
       <DeleteSweepOutlinedIcon />Clear Filter
     </Button>

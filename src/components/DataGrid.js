@@ -45,6 +45,10 @@ export default function MyDataGrid(props) {
         clearSearchText: props.clearSearchTextFn,
         value: props.filterText,
         onChange: props.filterTextChangeFn,
+        confirmed: props.confirmed,
+        classified: props.classified,
+        toggleConfirmed: props.toggleConfirmed,
+        toggleClassified: props.toggleClassified
       } }}>
     </DataGrid>
   )

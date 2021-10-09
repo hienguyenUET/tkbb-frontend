@@ -15,7 +15,9 @@ const Article = props => {
   const [page, setPage] = useState(0);
   let [searchText, setSearchText] = useState('');
   let [filterModel, setFilterModel] = useState({items: []});
-
+  let [confirmedCond, setConfirmedCond] = useState(true);
+  let [classifiedCond, setClassifiedCond] = useState(true);
+  
   let [categories, setCategories] = useState([]);
   
   const checkPublication = async (venue) => {
@@ -33,7 +35,7 @@ const Article = props => {
     const filteredRows = articles.filter((row) => {
       return Object.keys(row).some((field) => {
         return searchRegex.test(('' + row[field]));
-      });
+      }) && row.classified === confirmedCond && ((classifiedCond && row.categoryId > 1) || (!classifiedCond && row.categoryId === 1)); 
     });
     setRows(filteredRows);
   };
@@ -305,6 +307,18 @@ const Article = props => {
                   }}
                   filterText={searchText}
                   filterTextChangeFn={(event) => requestSearch(event.target.value)}
+                  confirmed={confirmedCond}
+                  classified={classifiedCond}
+                  toggleConfirmed={() => {
+                    confirmedCond = !confirmedCond;
+                    setConfirmedCond(confirmedCond)
+                    requestSearch(searchText);
+                  }}
+                  toggleClassified={() => {
+                    classifiedCond = !classifiedCond;
+                    setClassifiedCond(classifiedCond);
+                    requestSearch(searchText);
+                  }}
                   onEditCellChangeCommitted={handleCellChanged}
                 />
               </div>
