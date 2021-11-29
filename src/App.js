@@ -24,7 +24,7 @@ import { AuthContext } from './context'
 import { useRoutes, usePath } from 'hookrouter'
 
 const routes = {
-  '/': () => <Overview />,
+  '/': () => <Yearly />,
   '/jobs': () => <Jobs />,
   '/dashboard': () => <Dashboard />,
   // '/login': () => <Login />,

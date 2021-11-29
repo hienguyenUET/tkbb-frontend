@@ -11,6 +11,7 @@ import IconButton from '@material-ui/core/IconButton'
 
 import GetAppIcon from '@material-ui/icons/GetApp'
 import Modal from 'react-bootstrap/Modal'
+import Input from '@material-ui/core/Input'
 
 import { getUsers, uploadUsers, deleteUser, updateUser, crawArticleData, createUsers, crawlUsers} from '../api'
 
@@ -24,6 +25,7 @@ const Dashboard = props => {
   const cFullnameRef = useRef('')
   const cGoogleScholarRef = useRef('')
   const [show, setShow] = useState(false);
+  const [yearWindow, setYearWindow] = useState(1);
 
   let [filterModel, setFilterModel] = useState({items: []});
   let [searchText, setSearchText] = useState('');
@@ -168,7 +170,7 @@ const Dashboard = props => {
   }
 
   const handleCrawl = async (id) => {
-    await crawlUsers(id);
+    await crawlUsers(id, yearWindow);
     await reloadUser()
   }
 
@@ -214,8 +216,16 @@ const Dashboard = props => {
               <div>
                 <Button variant="contained" color="primary" component="span" size="small" startIcon={<GetAppIcon />}
                   onClick={handleCrawlArticle} >
-                  Crawl all article Data
+                  Crawl all
                 </Button>
+                <Input
+                    size="small"
+                    value={yearWindow}
+                    style={{width: '40px', marginLeft: "6px"}}
+                    type="number"
+                    step="1"
+                    onChange={(evt) => setYearWindow(parseInt(evt.target.value))}
+                  />
               </div>
               <div>
                 <input

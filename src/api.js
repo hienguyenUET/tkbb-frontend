@@ -163,8 +163,8 @@ const updatePublishcation = async (body, id) => {
     return response
 }
 
-const crawlUsers = async (id) => {
-    const { data: response } = await instance.post(`/api/v1/articles/crawling/user/${id}`)
+const crawlUsers = async (id, yearWindow = -1) => {
+    const { data: response } = await instance.post(`/api/v1/articles/crawling/user/${id}`, {yearWindow: yearWindow})
 
     return response
 }

@@ -35,7 +35,7 @@ const Article = props => {
     const filteredRows = articles.filter((row) => {
       return Object.keys(row).some((field) => {
         return searchRegex.test(('' + row[field]));
-      }) && row.classified === confirmedCond && ((classifiedCond && row.categoryId > 1) || (!classifiedCond && row.categoryId === 1)); 
+      }) && (confirmedCond && row.classified || !confirmedCond && (!row.classified) ) && ((classifiedCond && row.categoryId > 1) || (!classifiedCond && row.categoryId === 1)); 
     });
     setRows(filteredRows);
   };
