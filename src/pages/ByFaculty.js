@@ -1,4 +1,4 @@
-export default function Yearly() {
+export default function ByFaculty() {
   return (
     <div className="content-wrapper" style={{overflowX: 'hidden'}}>
       <iframe title="yearlyreport" style={{
@@ -7,7 +7,7 @@ export default function Yearly() {
               left: '-60px', 
               width: 'calc(100% + 60px)'
           }}
-          src="/grafana/d/QEDeRFInk/thong-ke-theo-nam?orgId=1&theme=light" frameborder="0">
+          src="/grafana/d/etMlI_p7k/thong-ke-theo-don-vi?orgId=1&theme=light" frameborder="0">
       </iframe>
     </div>
   )

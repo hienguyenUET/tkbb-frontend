@@ -50,6 +50,20 @@ const Menu = props => {
                     </A>
                   </li>
                   <li className="nav-item" style={smallStyle}>
+                    <A href="/byfaculty" className="nav-link" style={{color:'#FFFFCC'}}>
+                      <p>
+                        Thống kê theo đơn vị
+                      </p>
+                    </A>
+                  </li>
+                  <li className="nav-item" style={smallStyle}>
+                    <A href="/byuser" className="nav-link" style={{color:'#FFFFCC'}}>
+                      <p>
+                        Tổng hợp theo cán bộ
+                      </p>
+                    </A>
+                  </li>
+                  <li className="nav-item" style={smallStyle}>
                     <A href="/overview" className="nav-link" style={{color:'#FFFFCC'}}>
                       <p>
                         Thống kê chi tiết
@@ -77,6 +91,14 @@ const Menu = props => {
                   <i className="nav-icon fas fa-file-alt" />
                   <p>
                     Danh mục bài báo
+                  </p>
+                </A>
+              </li>
+              <li className="nav-item">
+                <A href="/dedup" className="nav-link">
+                  <i className="nav-icon fas fa-file-alt" />
+                  <p>
+                    Kiểm tra trùng lặp
                   </p>
                 </A>
               </li>

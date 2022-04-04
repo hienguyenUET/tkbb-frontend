@@ -113,8 +113,8 @@ const reloadArticle = async (aid) => {
     return response;
 }
 
-const crawArticleData = async () => {
-    const { data: response } = await instance.post('/api/v1/articles/crawling')
+const crawArticleData = async (yearWindow) => {
+    const { data: response } = await instance.post('/api/v1/articles/crawling', {yearWindow});
 
     return response
 }
@@ -204,6 +204,10 @@ const queryArticles = async (criteria) => {
     const { data: response } = await instance.post('/api/v1/articles/query', criteria);
     return response;
 }
+const queryDupplicatedArticles = async () => {
+    const { data: response } = await instance.get('/api/v1/articles/dedup');
+    return response;
+}
 const getFaculties = async () => {
     const { data: response } = await instance.get('/api/v1/users/faculties');
     return response
@@ -253,6 +257,7 @@ export {
     updateCategory,
     createCategory,
     queryArticles,
+    queryDupplicatedArticles,
     getFaculties,
     uploadJournalList,
     findJournal

@@ -22,6 +22,7 @@ function MyGridToolbar(props) {
     <IconButton onClick={props.clearSearchText}>
       <CloseIcon />
     </IconButton>
+    <FormControlLabel style={{marginBottom: 0}} control={<Switch checked={props.all} onChange={props.toggleAll} color="primary" />} label="All" />
     <FormControlLabel style={{marginBottom: 0}} control={<Switch checked={props.confirmed} onChange={props.toggleConfirmed} color="primary" />} label="Confirmed" />
     <FormControlLabel style={{marginBottom: 0}} control={<Switch checked={props.classified} onChange={props.toggleClassified} color="primary" />} label="Classified" />
     <Button size="small" onClick={ props.clearFilter }>

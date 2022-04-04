@@ -23,9 +23,10 @@ const Dashboard = props => {
   const userFileRef = useRef('')
   const cFacultyRef = useRef('')
   const cFullnameRef = useRef('')
+  const cEnglishNameRef = useRef('')
   const cGoogleScholarRef = useRef('')
   const [show, setShow] = useState(false);
-  const [yearWindow, setYearWindow] = useState(1);
+  const [yearWindow, setYearWindow] = useState(0);
 
   let [filterModel, setFilterModel] = useState({items: []});
   let [searchText, setSearchText] = useState('');
@@ -61,6 +62,7 @@ const Dashboard = props => {
   const handleCreate = async () => {
     const body = {
       fullName: cFullnameRef.current.value,
+      englishName: cEnglishNameRef.current.value,
       faculty: cFacultyRef.current.value,
       gsUrl: cGoogleScholarRef.current.value,
     }
@@ -101,6 +103,17 @@ const Dashboard = props => {
       width: 180,
     },
     {
+      field: 'englishName',
+      editable: true,
+      headerName: "Eng. name",
+      renderCell: (params) => (
+        <div style={{width: '100%', overflow:' hidden', textOverflow: 'ellipsis'}} 
+          title={params.getValue('faculty')}>{params.getValue('englishName') && params.getValue('englishName').length ? params.getValue('englishName') : 'N/A'}
+        </div>
+      ),
+      width: 120,
+    },
+    {
       field: 'gsUrl',
       headerName: 'Google Scholar Url',
       editable: true,
@@ -126,7 +139,7 @@ const Dashboard = props => {
               color="primary"
               onClick={handleCrawl.bind(this, params.getValue('id'))}
             >
-              Crawl
+              Crawl {yearWindow} năm
             </Button>
           </div>
         )
@@ -175,7 +188,7 @@ const Dashboard = props => {
   }
 
   const handleCrawlArticle = async () => {
-    await crawArticleData()
+    await crawArticleData(yearWindow)
   }
   const handleCellChanged = ({id, field, props}) => {
     const body = {}
@@ -216,16 +229,17 @@ const Dashboard = props => {
               <div>
                 <Button variant="contained" color="primary" component="span" size="small" startIcon={<GetAppIcon />}
                   onClick={handleCrawlArticle} >
-                  Crawl all
+                  Crawl
                 </Button>
-                <Input
-                    size="small"
-                    value={yearWindow}
-                    style={{width: '40px', marginLeft: "6px"}}
-                    type="number"
-                    step="1"
-                    onChange={(evt) => setYearWindow(parseInt(evt.target.value))}
-                  />
+                <select style={{marginLeft: "6px"}} value={props.faculty} onChange={(evt) => setYearWindow(evt.target.value)}>
+                  <option value={0}>Năm hiện tại</option>
+                  <option value={1}>Từ 1 năm trước</option>
+                  <option value={2}>Từ 2 năm trước</option>
+                  <option value={3}>Từ 3 năm trước</option>
+                  <option value={4}>Từ 4 năm trước</option>
+                  <option value={5}>Từ 5 năm trước</option>
+                  <option value={-1}>Tất cả các năm</option>
+                </select>
               </div>
               <div>
                 <input
@@ -294,6 +308,12 @@ const Dashboard = props => {
                     placeholder="Fullname"
                     type="text"
                     ref={cFullnameRef}
+                  />
+                  <input
+                    className="form-control m-1"
+                    placeholder="English name"
+                    type="text"
+                    ref={cEnglishNameRef}
                   />
                   <input
                     className="form-control m-1"

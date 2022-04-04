@@ -14,10 +14,13 @@ import Articles from './pages/Article'
 //import Publishcations from './pages/Publishcations'
 import Category from './pages/Category'
 import Report from './pages/Report'
+import DeDup from './pages/DeDup'
 import BlankPage from './pages/BlankPage'
 import Update from './pages/Update'
 import Overview from './pages/Overview'
 import Yearly from './pages/Yearly'
+import ByFaculty from './pages/ByFaculty'
+import ByUser from './pages/ByUser'
 
 import { AuthContext } from './context'
 
@@ -33,9 +36,12 @@ const routes = {
   //'/publishcations': () => <Publishcations />,
   '/category': () => <Category />,
   '/report': () => <Report />,
+  '/dedup': () => <DeDup />,
   '/update': () => <Update />,
   '/overview': () => <Overview />,
-  '/yearly': () => <Yearly />
+  '/yearly': () => <Yearly />,
+  '/byfaculty': () => <ByFaculty />,
+  '/byuser': () => <ByUser />
 }
 
 const App = props => {

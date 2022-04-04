@@ -15,8 +15,9 @@ const Article = props => {
   const [page, setPage] = useState(0);
   let [searchText, setSearchText] = useState('');
   let [filterModel, setFilterModel] = useState({items: []});
-  let [confirmedCond, setConfirmedCond] = useState(true);
-  let [classifiedCond, setClassifiedCond] = useState(true);
+  let [confirmedCond, setConfirmedCond] = useState(false);
+  let [classifiedCond, setClassifiedCond] = useState(false);
+  let [allCond, setAllCond] = useState(true);
   
   let [categories, setCategories] = useState([]);
   
@@ -35,7 +36,7 @@ const Article = props => {
     const filteredRows = articles.filter((row) => {
       return Object.keys(row).some((field) => {
         return searchRegex.test(('' + row[field]));
-      }) && (confirmedCond && row.classified || !confirmedCond && (!row.classified) ) && ((classifiedCond && row.categoryId > 1) || (!classifiedCond && row.categoryId === 1)); 
+      }) && (allCond || confirmedCond && row.classified || !confirmedCond && (!row.classified) ) && (allCond || (classifiedCond && row.categoryId > 1) || (!classifiedCond && row.categoryId === 1));
     });
     setRows(filteredRows);
   };
@@ -307,14 +308,24 @@ const Article = props => {
                   }}
                   filterText={searchText}
                   filterTextChangeFn={(event) => requestSearch(event.target.value)}
+                  all={allCond}
                   confirmed={confirmedCond}
                   classified={classifiedCond}
+                  toggleAll={() => {
+                    allCond = !allCond;
+                    setAllCond(allCond);
+                    requestSearch(searchText);
+                  }}
                   toggleConfirmed={() => {
+                    allCond = false;
+                    setAllCond(allCond);
                     confirmedCond = !confirmedCond;
                     setConfirmedCond(confirmedCond)
                     requestSearch(searchText);
                   }}
                   toggleClassified={() => {
+                    allCond = false;
+                    setAllCond(allCond);
                     classifiedCond = !classifiedCond;
                     setClassifiedCond(classifiedCond);
                     requestSearch(searchText);
