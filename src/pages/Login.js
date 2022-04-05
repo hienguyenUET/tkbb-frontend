@@ -13,12 +13,15 @@ const Login = props => {
   const loginHandler = async (e) => {
     e.preventDefault()
 
-    const { data: token } = await loginApi({
+    const { data: responseData } = await loginApi({
       username: usernameRef.current.value,
       password: passwordRef.current.value,
     })
+    const { token, role } = responseData;
+    console.log(responseData, token, role );
     authContext.setUsername(usernameRef.current.value);
-    authContext.login(token)
+    authContext.setRole(role);
+    authContext.login(token);
   }
 
   return (

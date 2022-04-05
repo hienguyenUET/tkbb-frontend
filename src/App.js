@@ -66,12 +66,18 @@ const App = props => {
   const getUsername = () => {
     return localStorage.getItem('username');
   }
+  const setRole = (role) => {
+    localStorage.setItem('role', role)
+  }
+  const getRole = (role) => {
+    return localStorage.getItem('role');
+  }
   useEffect(() => {
     login(localStorage.getItem('token'))
   }, [])
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn: !!token, login, logout, setUsername, getUsername }}>
+    <AuthContext.Provider value={{ isLoggedIn: !!token, login, logout, setUsername, getUsername, setRole, getRole }}>
       {
         token ? 
         <div className="wrapper">

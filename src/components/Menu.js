@@ -30,6 +30,7 @@ const Menu = props => {
 
           {/* Sidebar Menu */}
           <nav className="mt-2">
+          {authContext.getRole() === 'admin'? (
             <ul className="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
               {/* Add icons to the links using the .nav-icon class
            with font-awesome or any other icon font library */}
@@ -56,6 +57,7 @@ const Menu = props => {
                       </p>
                     </A>
                   </li>
+                  {/*
                   <li className="nav-item" style={smallStyle}>
                     <A href="/byuser" className="nav-link" style={{color:'#FFFFCC'}}>
                       <p>
@@ -63,6 +65,7 @@ const Menu = props => {
                       </p>
                     </A>
                   </li>
+                  */}
                   <li className="nav-item" style={smallStyle}>
                     <A href="/overview" className="nav-link" style={{color:'#FFFFCC'}}>
                       <p>
@@ -72,7 +75,7 @@ const Menu = props => {
                   </li>
                 </ul>
               </li>
-              <li className="nav-item">
+	            <li className="nav-item">
                 <A href="/dashboard" className="nav-link">
                   <i className="nav-icon fas fa-users" />
                   <p>Cán bộ nghiên cứu</p>
@@ -133,8 +136,68 @@ const Menu = props => {
                 </A>
               </li>
             </ul>
+          ):(
+            <ul className="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+              <li className="nav-item has-treeview">
+                <A href="#" className="nav-link" style={{color:'#FFFFCC', fontWeight:"bold"}}>
+                  <i className="nav-icon fas fa-chart-pie" />
+                  <p>
+                    Số liệu thống kê
+                    <i className="right fas fa-angle-left"></i>
+                  </p>
+                </A>
+                <ul className='nav nav-treeview'>
+                  <li className="nav-item" style={smallStyle}>
+                    <A href="/yearly" className="nav-link" style={{color:'#FFFFCC'}}>
+                      <p>
+                        Thống kê theo năm
+                      </p>
+                    </A>
+                  </li>
+                  <li className="nav-item" style={smallStyle}>
+                    <A href="/byfaculty" className="nav-link" style={{color:'#FFFFCC'}}>
+                      <p>
+                        Thống kê theo đơn vị
+                      </p>
+                    </A>
+                  </li>
+                  {/*
+                  <li className="nav-item" style={smallStyle}>
+                    <A href="/byuser" className="nav-link" style={{color:'#FFFFCC'}}>
+                      <p>
+                        Tổng hợp theo cán bộ
+                      </p>
+                    </A>
+                  </li>
+                  */}
+                  <li className="nav-item" style={smallStyle}>
+                    <A href="/overview" className="nav-link" style={{color:'#FFFFCC'}}>
+                      <p>
+                        Thống kê chi tiết
+                      </p>
+                    </A>
+                  </li>
+                </ul>
+              </li>
+              <li className="nav-item">
+                <A href="/report" className="nav-link">
+                  <i className="nav-icon fas fa-file-alt" />
+                  <p>
+                    Danh mục bài báo
+                  </p>
+                </A>
+              </li>
+              <li className="nav-item">
+                <A href="/dedup" className="nav-link">
+                  <i className="nav-icon fas fa-file-alt" />
+                  <p>
+                    Kiểm tra trùng lặp
+                  </p>
+                </A>
+              </li>
+            </ul>
+          )}
           </nav>
-          {/* /.sidebar-menu */}
         </div>
         {/* /.sidebar */}
       </aside>
