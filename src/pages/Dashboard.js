@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { A } from 'hookrouter'
 //import { DataGrid } from '@material-ui/data-grid'
-import DataGrid from '../components/DataGrid'
+//import DataGrid from '../components/DataGrid'
+import DataGrid from '../components/ScholarDataGrid'
 import Button from '@material-ui/core/Button'
 import CloudUploadIcon from '@material-ui/icons/CloudUpload'
 import DeleteIcon from '@material-ui/icons/Delete'
@@ -19,7 +20,7 @@ import { getUsers, uploadUsers, deleteUser, updateUser, crawArticleData, createU
 const Dashboard = props => {
   const [users, setUsers] = useState([]);
   const [rows, setRows] = useState([])
-  const [showError, setShowError] = useState(false);
+  let [showError, setShowError] = useState(false);
   const userFileRef = useRef('')
   const cFacultyRef = useRef('')
   const cFullnameRef = useRef('')
@@ -137,7 +138,7 @@ const Dashboard = props => {
             <Button
               variant="outlined"
               color="primary"
-              onClick={handleCrawl.bind(this, params.getValue('id'))}
+              onClick={() => handleCrawl(params.getValue('id'))}
             >
               Crawl {yearWindow} năm
             </Button>
@@ -168,8 +169,8 @@ const Dashboard = props => {
   ]
 
   useEffect(() => {
-    reloadUser();
     setShowError(false);
+    reloadUser();
   }, [])
 
   const handleUploadUserFile = async () => {
@@ -183,7 +184,9 @@ const Dashboard = props => {
   }
 
   const handleCrawl = async (id) => {
+    console.log("ShowERROR:", showError, id);
     await crawlUsers(id, yearWindow);
+    console.log("ShowERROR1:", showError);
     await reloadUser()
   }
 
@@ -211,7 +214,7 @@ const Dashboard = props => {
           <div className="container-fluid">
             <div className="row mb-2">
               <div className="col-sm-6">
-                <h1 className="m-0">Scholars</h1>
+                <h1 className="m-0">Scholars {showError}</h1>
               </div>
               <div className="col-sm-6">
                 <ol className="breadcrumb float-sm-right nav-links">
@@ -265,7 +268,7 @@ const Dashboard = props => {
                   onClick={() => setShow(true)}
                 >Create
                 </Button>
-                <Button 
+                {/*<Button 
                   variant="contained" 
                   className="ml-1"
                   size="small"
@@ -273,7 +276,7 @@ const Dashboard = props => {
                   startIcon={<BugReportOutlined />}
                   onClick={async () => {setShowError(!showError);await reloadUser();}}>
                   {showError?"Show Error":"Show All"}
-                </Button>
+                </Button>*/}
               </div>
             </div>
 
@@ -292,6 +295,12 @@ const Dashboard = props => {
                 }}
                 filterText={searchText}
                 filterTextChangeFn={(event) => requestSearch(event.target.value)}
+                errorOnly={showError}
+                toggleErrorOnly={() => {
+                    showError = !showError;
+                    setShowError(showError);
+                    reloadUser();
+                }}
                 onEditCellChangeCommitted={handleCellChanged}
               />
                 {/*onEditCellChangeCommitted={handleCellChanged}*/}
