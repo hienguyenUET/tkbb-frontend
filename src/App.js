@@ -21,6 +21,8 @@ import Overview from './pages/Overview'
 import Yearly from './pages/Yearly'
 import ByFaculty from './pages/ByFaculty'
 import ByUser from './pages/ByUser'
+import PaperList from './pages/PaperList'
+import Scholars from './pages/Scholars'
 
 import { AuthContext } from './context'
 
@@ -41,24 +43,29 @@ const routes = {
   '/overview': () => <Overview />,
   '/yearly': () => <Yearly />,
   '/byfaculty': () => <ByFaculty />,
-  '/byuser': () => <ByUser />
+  '/byuser': () => <ByUser />,
+  '/paperlist': () => <PaperList />,
+  '/scholars': () => <Scholars />,
+  '/login': () => <Login />
 }
 
 const App = props => {
   const match = useRoutes(routes)
-  usePath()
+  const path = usePath()
 
   const [token, setToken] = useState(null)
 
   const login = async (jwt) => {
     setToken(jwt);
-    localStorage.setItem('token', jwt);
+    if (jwt !== null) localStorage.setItem('token', jwt);
   }
 
   const logout = () => {
-    setToken(null);
     localStorage.removeItem('token');
-    localStorage.remoteItem('username');
+    localStorage.removeItem('username');
+    localStorage.removeItem('role');
+    localStorage.removeItem('token');
+    setToken(null);
   }
   const setUsername = (username) => {
     localStorage.setItem('username', username);
@@ -78,16 +85,13 @@ const App = props => {
 
   return (
     <AuthContext.Provider value={{ isLoggedIn: !!token, login, logout, setUsername, getUsername, setRole, getRole }}>
-      {
-        token ? 
         <div className="wrapper">
+          {path !== '/login'?(<>
           <Header />
-          <Menu />
+          <Menu /></>):(<></>)}
           {match || <NotFound />}
           <Footer />
-        </div> :
-        <Login />
-      }
+        </div> 
     </AuthContext.Provider>
   );
 }

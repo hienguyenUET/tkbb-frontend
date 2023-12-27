@@ -22,7 +22,7 @@ const Jobs = props => {
         </div>
         <section className="content">
             <Iframe
-              url="https://tkbb.duckdns.org/queues/queue/crawlGS"
+              url="https://tkbb.uet.vnu.edu.vn/queues/queue/crawlGS"
               width="100%"
               height="592px"
             />

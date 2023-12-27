@@ -88,7 +88,7 @@ const Article = props => {
 
   const reloadTable = async () => {
     const { data } = await getArticles();
-    const dataRows = data.map(r => ({...r, categoryName: r.category.name }));
+    const dataRows = data.map(r => ({...r, categoryName: r.category.name, authorCnt: r.authors.split(',').length, researchHours: r.category.researchHours }));
     setArticles(dataRows);
     setRows(dataRows);
   }
@@ -231,16 +231,20 @@ const Article = props => {
         )
     },
     {
-      field: 'authors',
-      headerName: 'Authors Count',
+      field: 'authorCnt',
+      headerName: 'Author Count',
       width: 70,
-      renderCell: (params) => {
-        return (
-          <div>
-            {params.getValue('authors').split(',').length}
-          </div>
-        )
-      },
+      editable: false
+    },
+    {
+      field: 'authors',
+      headerName: 'Authors',
+      width: 270,
+    },
+    {
+      field: 'researchHours',
+      headerName: 'Giờ NCKH',
+      width: 100
     },
     {
       field: 'citedCount',

@@ -1,4 +1,4 @@
-export default function ByFaculty() {
+export default function PaperList() {
   return (
     <div className="content-wrapper" style={{overflowX: 'hidden'}}>
       <iframe title="yearlyreport" style={{
@@ -7,7 +7,7 @@ export default function ByFaculty() {
               left: '-60px', 
               width: 'calc(100% + 60px)'
           }}
-          src="/grafana/d/uKjnJiS7z/thong-ke-nghien-cuu?orgId=1&theme=light" frameborder="0">
+          src="/grafana/d/_1WyPrm4k/paper-list?orgId=1&theme=light" frameborder="0">
       </iframe>
     </div>
   )

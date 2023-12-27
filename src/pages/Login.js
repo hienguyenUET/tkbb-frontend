@@ -2,7 +2,7 @@ import React, { useContext, useRef } from 'react'
 
 import { AuthContext } from '../context'
 import { login as loginApi } from '../api'
-
+import { navigate } from 'hookrouter';
 
 const Login = props => {
   const authContext = useContext(AuthContext)
@@ -10,6 +10,9 @@ const Login = props => {
   const usernameRef = useRef('')
   const passwordRef = useRef('')
 
+  if (authContext.isLoggedIn) {
+    navigate('/');
+  }
   const loginHandler = async (e) => {
     e.preventDefault()
 
@@ -22,6 +25,7 @@ const Login = props => {
     authContext.setUsername(usernameRef.current.value);
     authContext.setRole(role);
     authContext.login(token);
+    navigate('/');
   }
 
   return (
@@ -63,6 +67,9 @@ const Login = props => {
 
               <div className="text-center mt-2 mb-3">
                 <button type="submit" className="btn btn-primary btn-block">Sign In</button>
+              </div>
+              <div className="text-center mt-2 mb-3">
+                <button type="button" className="btn btn-default btn-block" onClick={() => navigate('/')}>Back to Home</button>
               </div>
             </form>
           </div>

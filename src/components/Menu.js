@@ -20,20 +20,186 @@ const Menu = props => {
         <div className="sidebar">
           {/* Sidebar user panel (optional) */}
           <div className="user-panel mt-3 pb-3 mb-3 d-flex">
-            <div className="image">
+            {authContext.isLoggedIn?<div className="image">
               <img src="/dist/img/user2-160x160.jpg" className="img-circle elevation-2" alt="User"/>
-            </div>
+            </div>:<div style={{width: '34px', height: '34px'}}></div>}
             <div className="info">
-              <A href="/" className="d-block">{authContext.getUsername()}</A>
+              {authContext.isLoggedIn?(<A href="/" className="d-block">{authContext.getUsername()}</A>) : (<A href="/login" className="d-block"><i className="nav-icon fas fa-sign-in-alt" /><span style={{marginLeft:'0.5em'}}>Login</span></A>)}
             </div>
           </div>
 
           {/* Sidebar Menu */}
           <nav className="mt-2">
-          {authContext.getRole() === 'admin'? (
+          {authContext.isLoggedIn? (
+            authContext.getRole() === 'admin'? (
+              <ul className="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <li className="nav-item has-treeview">
+                  <A href="#" className="nav-link" style={{color:'#FFFFCC', fontWeight:"bold"}}>
+                    <i className="nav-icon fas fa-chart-pie" />
+                    <p>
+                      Số liệu thống kê
+                      <i className="right fas fa-angle-left"></i>
+                    </p>
+                  </A>
+                  <ul className='nav nav-treeview'>
+                    <li className="nav-item" style={smallStyle}>
+                      <A href="/yearly" className="nav-link" style={{color:'#FFFFCC'}}>
+                        <p>
+                          Thống kê theo năm
+                        </p>
+                      </A>
+                    </li>
+                    <li className="nav-item" style={smallStyle}>
+                      <A href="/byfaculty" className="nav-link" style={{color:'#FFFFCC'}}>
+                        <p>
+                          Thống kê theo đơn vị
+                        </p>
+                      </A>
+                    </li>
+                    {/*
+                    <li className="nav-item" style={smallStyle}>
+                      <A href="/byuser" className="nav-link" style={{color:'#FFFFCC'}}>
+                        <p>
+                          Tổng hợp theo cán bộ
+                        </p>
+                      </A>
+                    </li>
+                    */}
+                    <li className="nav-item" style={smallStyle}>
+                      <A href="/overview" className="nav-link" style={{color:'#FFFFCC'}}>
+                        <p>
+                          Thống kê chi tiết
+                        </p>
+                      </A>
+                    </li>
+                  </ul>
+                </li>
+                <li className="nav-item">
+                  <A href="/dashboard" className="nav-link">
+                    <i className="nav-icon fas fa-users" />
+                    <p>Cán bộ nghiên cứu</p>
+                  </A>
+                </li>
+                <li className="nav-item">
+                  <A href="/articles" className="nav-link">
+                    <i className="nav-icon fas fa-newspaper" />
+                    <p>
+                      Phân loại bài báo
+                    </p>
+                  </A>
+                </li>
+                <li className="nav-item">
+                  <A href="/report" className="nav-link">
+                  {/*<A href="/paperlist" className="nav-link">*/}
+                    <i className="nav-icon fas fa-file-alt" />
+                    <p>
+                      Danh mục bài báo
+                    </p>
+                  </A>
+                </li>
+                <li className="nav-item">
+                  <A href="/dedup" className="nav-link">
+                    <i className="nav-icon fas fa-file-alt" />
+                    <p>
+                      Kiểm tra trùng lặp
+                    </p>
+                  </A>
+                </li>
+                <li className="nav-item">
+                  <A href="/category" className="nav-link">
+                    <i className="nav-icon fas fa-layer-group" />
+                    <p>
+                      Quản lý loại công bố
+                    </p>
+                  </A>
+                </li>
+                <li className="nav-item">
+                  <A href="/update" className="nav-link">
+                    <i className="nav-icon fas fa-database" />
+                    <p>
+                      Cập nhật ds công bố
+                    </p>
+                  </A>
+                </li>
+                <li className="nav-item">
+                  <A href="/junk" className="nav-link">
+                    <i className="nav-icon fas fa-bug" />
+                    <p>
+                      Lỗi lấy dữ liệu
+                    </p>
+                  </A>
+                </li>
+                <li className="nav-item">
+                  <A href="/jobs" className="nav-link">
+                    <i className="nav-icon fas fa-tachometer-alt" />
+                    <p>Theo dõi lấy dữ liệu</p>
+                  </A>
+                </li>
+              </ul>
+            ):(
+              <ul className="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <li className="nav-item has-treeview">
+                  <A href="#" className="nav-link" style={{color:'#FFFFCC', fontWeight:"bold"}}>
+                    <i className="nav-icon fas fa-chart-pie" />
+                    <p>
+                      Số liệu thống kê
+                      <i className="right fas fa-angle-left"></i>
+                    </p>
+                  </A>
+                  <ul className='nav nav-treeview'>
+                    <li className="nav-item" style={smallStyle}>
+                      <A href="/yearly" className="nav-link" style={{color:'#FFFFCC'}}>
+                        <p>
+                          Thống kê theo năm
+                        </p>
+                      </A>
+                    </li>
+                    <li className="nav-item" style={smallStyle}>
+                      <A href="/byfaculty" className="nav-link" style={{color:'#FFFFCC'}}>
+                        <p>
+                          Thống kê theo đơn vị
+                        </p>
+                      </A>
+                    </li>
+                    {/*
+                    <li className="nav-item" style={smallStyle}>
+                      <A href="/byuser" className="nav-link" style={{color:'#FFFFCC'}}>
+                        <p>
+                          Tổng hợp theo cán bộ
+                        </p>
+                      </A>
+                    </li>
+                    */}
+                    <li className="nav-item" style={smallStyle}>
+                      <A href="/overview" className="nav-link" style={{color:'#FFFFCC'}}>
+                        <p>
+                          Thống kê chi tiết
+                        </p>
+                      </A>
+                    </li>
+                  </ul>
+                </li>
+                <li className="nav-item">
+                  {/*<A href="/report" className="nav-link">*/}
+                  <A href="/paperlist" className="nav-link">
+                    <i className="nav-icon fas fa-file-alt" />
+                    <p>
+                      Danh mục bài báo
+                    </p>
+                  </A>
+                </li>
+                <li className="nav-item">
+                  <A href="/dedup" className="nav-link">
+                    <i className="nav-icon fas fa-file-alt" />
+                    <p>
+                      Kiểm tra trùng lặp
+                    </p>
+                  </A>
+                </li>
+              </ul>
+            )
+          ): (
             <ul className="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-              {/* Add icons to the links using the .nav-icon class
-           with font-awesome or any other icon font library */}
               <li className="nav-item has-treeview">
                 <A href="#" className="nav-link" style={{color:'#FFFFCC', fontWeight:"bold"}}>
                   <i className="nav-icon fas fa-chart-pie" />
@@ -75,22 +241,8 @@ const Menu = props => {
                   </li>
                 </ul>
               </li>
-	            <li className="nav-item">
-                <A href="/dashboard" className="nav-link">
-                  <i className="nav-icon fas fa-users" />
-                  <p>Cán bộ nghiên cứu</p>
-                </A>
-              </li>
               <li className="nav-item">
-                <A href="/articles" className="nav-link">
-                  <i className="nav-icon fas fa-newspaper" />
-                  <p>
-                    Phân loại bài báo
-                  </p>
-                </A>
-              </li>
-              <li className="nav-item">
-                <A href="/report" className="nav-link">
+                <A href="/paperlist" className="nav-link">
                   <i className="nav-icon fas fa-file-alt" />
                   <p>
                     Danh mục bài báo
@@ -98,102 +250,10 @@ const Menu = props => {
                 </A>
               </li>
               <li className="nav-item">
-                <A href="/dedup" className="nav-link">
-                  <i className="nav-icon fas fa-file-alt" />
-                  <p>
-                    Kiểm tra trùng lặp
-                  </p>
-                </A>
-              </li>
-              <li className="nav-item">
-                <A href="/category" className="nav-link">
-                  <i className="nav-icon fas fa-layer-group" />
-                  <p>
-                    Quản lý loại công bố
-                  </p>
-                </A>
-              </li>
-              <li className="nav-item">
-                <A href="/update" className="nav-link">
-                  <i className="nav-icon fas fa-database" />
-                  <p>
-                    Cập nhật ds công bố
-                  </p>
-                </A>
-              </li>
-              <li className="nav-item">
-                <A href="/junk" className="nav-link">
-                  <i className="nav-icon fas fa-bug" />
-                  <p>
-                    Lỗi lấy dữ liệu
-                  </p>
-                </A>
-              </li>
-              <li className="nav-item">
-                <A href="/jobs" className="nav-link">
-                  <i className="nav-icon fas fa-tachometer-alt" />
-                  <p>Theo dõi lấy dữ liệu</p>
-                </A>
-              </li>
-            </ul>
-          ):(
-            <ul className="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-              <li className="nav-item has-treeview">
-                <A href="#" className="nav-link" style={{color:'#FFFFCC', fontWeight:"bold"}}>
-                  <i className="nav-icon fas fa-chart-pie" />
-                  <p>
-                    Số liệu thống kê
-                    <i className="right fas fa-angle-left"></i>
-                  </p>
-                </A>
-                <ul className='nav nav-treeview'>
-                  <li className="nav-item" style={smallStyle}>
-                    <A href="/yearly" className="nav-link" style={{color:'#FFFFCC'}}>
-                      <p>
-                        Thống kê theo năm
-                      </p>
-                    </A>
-                  </li>
-                  <li className="nav-item" style={smallStyle}>
-                    <A href="/byfaculty" className="nav-link" style={{color:'#FFFFCC'}}>
-                      <p>
-                        Thống kê theo đơn vị
-                      </p>
-                    </A>
-                  </li>
-                  {/*
-                  <li className="nav-item" style={smallStyle}>
-                    <A href="/byuser" className="nav-link" style={{color:'#FFFFCC'}}>
-                      <p>
-                        Tổng hợp theo cán bộ
-                      </p>
-                    </A>
-                  </li>
-                  */}
-                  <li className="nav-item" style={smallStyle}>
-                    <A href="/overview" className="nav-link" style={{color:'#FFFFCC'}}>
-                      <p>
-                        Thống kê chi tiết
-                      </p>
-                    </A>
-                  </li>
-                </ul>
-              </li>
-              <li className="nav-item">
-                <A href="/report" className="nav-link">
-                  <i className="nav-icon fas fa-file-alt" />
-                  <p>
-                    Danh mục bài báo
-                  </p>
-                </A>
-              </li>
-              <li className="nav-item">
-                <A href="/dedup" className="nav-link">
-                  <i className="nav-icon fas fa-file-alt" />
-                  <p>
-                    Kiểm tra trùng lặp
-                  </p>
-                </A>
+                  <A href="/scholars" className="nav-link">
+                    <i className="nav-icon fas fa-users" />
+                    <p>Cán bộ nghiên cứu</p>
+                  </A>
               </li>
             </ul>
           )}

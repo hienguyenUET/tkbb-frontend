@@ -7,7 +7,7 @@ export default function Oveview() {
               left: '-60px', 
               width: 'calc(100% + 60px)'
           }}
-          src="/grafana/d/uKjnJiS7z/thong-ke-nghien-cuu?orgId=1&theme=light" frameborder="0">
+          src="/grafana/d/etMlI_p7k/thong-ke-theo-don-vi?orgId=1&theme=light" frameborder="0">
       </iframe>
     </div>
   )
