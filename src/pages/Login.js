@@ -1,10 +1,10 @@
 import React, { useContext, useRef } from 'react'
 
 import { AuthContext } from '../context'
-import { login as loginApi } from '../api'
 import { navigate } from 'hookrouter';
+import login from '../api/auth';
 
-const Login = props => {
+const Login = () => {
   const authContext = useContext(AuthContext)
 
   const usernameRef = useRef('')
@@ -15,13 +15,11 @@ const Login = props => {
   }
   const loginHandler = async (e) => {
     e.preventDefault()
-
-    const { data: responseData } = await loginApi({
+    const { data: responseData } = await login({
       username: usernameRef.current.value,
       password: passwordRef.current.value,
     })
     const { token, role } = responseData;
-    console.log(responseData, token, role );
     authContext.setUsername(usernameRef.current.value);
     authContext.setRole(role);
     authContext.login(token);

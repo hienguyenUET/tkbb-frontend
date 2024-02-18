@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
-import { 
-  DataGrid, 
+import {
+  DataGrid,
   GridToolbarExport
 } from '@material-ui/data-grid'
 import Button from '@material-ui/core/Button'
-import { queryArticles, getCategories, getFaculties } from '../api';
+import { queryArticles } from '../api/article';
+import { getCategories } from '../api/category';
+import { getFaculties } from '../api/faculty';
 
 function CustomGridToolbar(props) {
   const commonStyle = {
@@ -62,14 +64,14 @@ export default function Report() {
   }, []);
 
   const columns = [
-    {field: 'id', headerName: 'ID', width: 70},
-    {field: 'authors', headerName: "Authors", width: 400},
-    {field: 'title', headerName: 'Title', width: 700},
-    {field: 'venue', headerName: 'Publication', width: 500},
-    {field: 'publisher', headerName: 'Publisher', width: 120},
-    {field: 'publicationDate', headerName:'Pub. Date', width: 120}, 
-    {field: 'faculty', headerName: 'Faculty', width: 150},
-    {field: 'category', headerName: 'Category', width: 150}
+    { field: 'id', headerName: 'ID', width: 70 },
+    { field: 'authors', headerName: "Authors", width: 400 },
+    { field: 'title', headerName: 'Title', width: 700 },
+    { field: 'venue', headerName: 'Publication', width: 500 },
+    { field: 'publisher', headerName: 'Publisher', width: 120 },
+    { field: 'publicationDate', headerName: 'Pub. Date', width: 120 },
+    { field: 'faculty', headerName: 'Faculty', width: 150 },
+    { field: 'category', headerName: 'Category', width: 150 }
   ]
   return (
     <div className="content-wrapper">
@@ -89,22 +91,22 @@ export default function Report() {
           <div className="text-right">
           </div>
           <div style={{ height: 700, width: '100%', backgroundColor: '#fff' }}>
-            <DataGrid 
+            <DataGrid
               rows={rows} columns={columns} pageSize={10}
               components={{ Toolbar: CustomGridToolbar }}
-              componentsProps={{ 
+              componentsProps={{
                 toolbar: {
                   faculties, categories, faculty, category, startDate, endDate,
-                  facultyChangeFn: (evt) => setFaculty((evt.target.value !== '0')?evt.target.value:undefined),
-                  categoryChangeFn: (evt) => setCategory((evt.target.value !== '0')?evt.target.value:undefined),
+                  facultyChangeFn: (evt) => setFaculty((evt.target.value !== '0') ? evt.target.value : undefined),
+                  categoryChangeFn: (evt) => setCategory((evt.target.value !== '0') ? evt.target.value : undefined),
                   startDateChangeFn: (evt) => setStartDate(evt.target.value),
                   endDateChangeFn: (evt) => setEndDate(evt.target.value),
-                  applyFilterFn: () => { 
+                  applyFilterFn: () => {
                     console.log(faculty, category, startDate, endDate);
-                    reloadTable({faculty, category, startDate, endDate});
+                    reloadTable({ faculty, category, startDate, endDate });
                   }
                 }
-              }}/>
+              }} />
           </div>
         </div>
       </section>

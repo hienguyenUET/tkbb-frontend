@@ -1,21 +1,15 @@
 import { useEffect, useState, useRef } from 'react'
 import { A } from 'hookrouter'
-//import { DataGrid } from '@material-ui/data-grid'
-//import DataGrid from '../components/DataGrid'
 import DataGrid from '../components/ScholarDataGrid'
 import Button from '@material-ui/core/Button'
 import CloudUploadIcon from '@material-ui/icons/CloudUpload'
 import DeleteIcon from '@material-ui/icons/Delete'
 import AddIcon from '@material-ui/icons/Add'
-import BugReportOutlined from '@material-ui/icons/BugReportOutlined';
 import IconButton from '@material-ui/core/IconButton'
-
 import GetAppIcon from '@material-ui/icons/GetApp'
 import Modal from 'react-bootstrap/Modal'
-import Input from '@material-ui/core/Input'
-
-import { getUsers, uploadUsers, deleteUser, updateUser, crawArticleData, createUsers, crawlUsers} from '../api'
-
+import { crawlUsers, createUsers, deleteUser, getUsers, updateUser, uploadUsers } from '../api/user'
+import { crawlArticleData } from '../api/article';
 
 const Dashboard = props => {
   const [users, setUsers] = useState([]);
@@ -191,8 +185,9 @@ const Dashboard = props => {
   }
 
   const handleCrawlArticle = async () => {
-    await crawArticleData(yearWindow)
+    await crawlArticleData(yearWindow)
   }
+
   const handleCellChanged = ({id, field, props}) => {
     const body = {}
     switch (field) {

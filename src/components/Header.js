@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { AuthContext } from '../context'
 import { A } from 'hookrouter'
 
-const Header = props => {
+const Header = () => {
   const authContext = useContext(AuthContext)
 
   return (

@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button'
 import IconButton from '@material-ui/core/IconButton'
 import Modal from 'react-bootstrap/Modal'
 
-import { getCategories, deleteCategory, createCategory, updateCategory } from '../api';
+import { getCategories, deleteCategory, createCategory, updateCategory } from '../api/category';
 
 class Category extends React.Component {
   constructor(props) {

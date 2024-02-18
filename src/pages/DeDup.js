@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react'
 import { 
   DataGrid, 
-  GridToolbarExport
 } from '@material-ui/data-grid'
-import Button from '@material-ui/core/Button'
-import { queryDupplicatedArticles } from '../api';
+import { queryDupplicatedArticles } from '../api/article';
 
 export default function DeDup() {
   const [rows, setRows] = useState([]);

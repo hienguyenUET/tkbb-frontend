@@ -6,7 +6,6 @@ import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
 import DeleteSweepOutlinedIcon from '@material-ui/icons/DeleteSweepOutlined'
 import SearchIcon from '@material-ui/icons/Search'
-import TextField from '@material-ui/core/TextField'
 import Input from '@material-ui/core/Input'
 
 function MyGridToolbar(props) {

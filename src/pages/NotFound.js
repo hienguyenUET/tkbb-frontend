@@ -1,7 +1,7 @@
 import React from 'react'
 import { A } from 'hookrouter'
 
-const NotFound = props => {
+const NotFound = () => {
     return (
         <div className="content-wrapper">
         {/* Content Header (Page header) */}

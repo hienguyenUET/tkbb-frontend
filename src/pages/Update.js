@@ -2,7 +2,8 @@ import {useRef} from 'react';
 import { A } from 'hookrouter'
 import Button from '@material-ui/core/Button'
 import CloudUploadIcon from '@material-ui/icons/CloudUpload'
-import {uploadJournalList} from '../api';
+import { uploadJournalList } from '../api/jounal'
+
 export default function Update() {
   const isiFileRef = useRef('');
   const scopusFileRef = useRef('');

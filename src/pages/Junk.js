@@ -3,16 +3,14 @@ import { DataGrid, GridToolbar } from '@material-ui/data-grid'
 import CachedOutlined from '@material-ui/icons/CachedOutlined'
 import FindInPageOutlined from '@material-ui/icons/FindInPageOutlined'
 import IconButton from '@material-ui/core/IconButton'
+import { deleteJunk, getJunks } from '../api/junk'
 
-import { getJunks, deleteJunk } from '../api';
-
-
-const Junk = props => {
+const Junk = () => {
   const citationLink = (citation, user) => (`https://scholar.google.com/citations?view_op=view_citation&hl=en&user=${user}&citation_for_view=${citation}`)
   const [rows, setRows] = useState([])
 
   const reloadTable = async () => {
-    const { data: junks } = await getJunks()
+    const { data: junks } = await getJunks
     let rows = junks.map(j => {
       j.id = j.citation;
       return j;
@@ -71,7 +69,7 @@ const Junk = props => {
         return (
           <div>
             <IconButton color="primary"
-              onClick={() => window.open(citationLink(params.getValue('citation'),params.getValue('user')), "_blank")}>
+              onClick={() => window.open(citationLink(params.getValue('citation'), params.getValue('user')), "_blank")}>
               <FindInPageOutlined />
             </IconButton>
             <IconButton
