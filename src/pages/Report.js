@@ -17,6 +17,7 @@ function CustomGridToolbar(props) {
     padding: '3px',
     ...commonStyle
   }
+  console.log(props);
   return (
     <div>
       <div>
@@ -50,7 +51,6 @@ export default function Report() {
   const [endDate, setEndDate] = useState(null);
   const [rows, setRows] = useState([]);
   const reloadTable = async (criteria) => {
-    console.log('Reload table');
     const { data: articles } = await queryArticles(criteria)
     setRows(articles);
   }

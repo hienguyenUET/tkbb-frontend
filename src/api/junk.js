@@ -1,4 +1,4 @@
-import api from "../interceptor";
+import api from "../auth/interceptor"
 
 const getJunks = async () => {
     const { data: response } = await api.get(`/api/v1/junk`);

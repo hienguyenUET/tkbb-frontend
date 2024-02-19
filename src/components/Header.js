@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { AuthContext } from '../context'
+import { AuthContext } from '../auth/auth_context';
 import { A } from 'hookrouter'
 
 const Header = () => {

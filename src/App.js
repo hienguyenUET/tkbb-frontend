@@ -17,7 +17,7 @@ import ByFaculty from './pages/ByFaculty'
 import ByUser from './pages/ByUser'
 import PaperList from './pages/PaperList'
 import Scholars from './pages/Scholars'
-import { AuthProvider } from './context'
+import { AuthProvider } from './auth/auth_context'
 import { useRoutes, usePath } from 'hookrouter'
 import Home from './components/Home';
 

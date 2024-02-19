@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState } from 'react';
+import AxiosErrorHandling from './axios_error_handling';
 
 export const AuthContext = createContext({
   isLoggedIn: false,
@@ -24,6 +25,8 @@ export const AuthProvider = ({ children }) => {
     if (isHavingJwtToken(jwt)) {
       setJwtTokenToLocalStorage(jwt);
       setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false)
     };
   }
   const logout = () => {
@@ -57,7 +60,9 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{ isLoggedIn, login, logout, setUsername, getUsername, setRole, getRole }}>
-      {children}
+      <AxiosErrorHandling>
+        {children}
+      </AxiosErrorHandling>
     </AuthContext.Provider>
   )
 }

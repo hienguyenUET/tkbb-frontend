@@ -1,4 +1,4 @@
-import api from "../interceptor";
+import api from "../auth/interceptor";
 import toast from "./../toast"
 
 const deleteArticle = async (aid) => {

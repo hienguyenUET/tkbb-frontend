@@ -1,4 +1,4 @@
-import api from "../interceptor";
+import api from "../auth/interceptor";
 
 const createCategory = async (category) => {
     const { data: response } = await api.post(`/api/v1/category`, category);
@@ -7,7 +7,6 @@ const createCategory = async (category) => {
 const getCategories = async () => {
     const { data: response } = await api.get('/api/v1/category');
     return response;
-
 }
 const updateCategory = async (id, category) => {
     const { data: response } = await api.put(`/api/v1/category/${id}`, category);

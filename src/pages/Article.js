@@ -320,7 +320,6 @@ const Article = () => {
                   pageSize={10}
                   filterModel={filterModel}
                   onFilterModelChange={(params) => {
-                    console.log(params);
                     params.api.setPage(0);
                   }}
                   clearSearchTextFn={() => requestSearch('')}

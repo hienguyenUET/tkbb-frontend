@@ -10,7 +10,7 @@ const Junk = () => {
   const [rows, setRows] = useState([])
 
   const reloadTable = async () => {
-    const { data: junks } = await getJunks
+    const { data: junks } = await getJunks()
     let rows = junks.map(j => {
       j.id = j.citation;
       return j;

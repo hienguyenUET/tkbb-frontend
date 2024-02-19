@@ -9,7 +9,6 @@ export default function DeDup() {
   const reloadTable = async () => {
     console.log('reloadTable');
     const { data: articles } = await queryDupplicatedArticles();
-    console.log(articles);
     setRows(articles);
   }
   useEffect(() => {

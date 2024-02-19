@@ -3,11 +3,10 @@ import Footer from './Footer'
 import Header from './Header'
 import NotFound from './../pages/NotFound'
 
-const Home = ({ path, match }) => {
-
+const Home = (props) => {
     return (
         <div className="wrapper">
-            {path !== '/login'
+            {props.path !== '/login'
                 ? (
                     <>
                         <Header />
@@ -16,7 +15,7 @@ const Home = ({ path, match }) => {
                 )
                 : (<></>)
             }
-            {match || <NotFound />}
+            {props.match || <NotFound />}
             <Footer></Footer>
         </div>
     )

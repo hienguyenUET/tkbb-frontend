@@ -1,8 +1,8 @@
 import React, {useContext} from 'react'
 import { A } from 'hookrouter'
-import { AuthContext } from '../context';
+import { AuthContext } from '../auth/auth_context';
 
-const Menu = props => {
+const Menu = () => {
   const authContext = useContext(AuthContext);
   const smallStyle={
     fontSize: '0.85rem',

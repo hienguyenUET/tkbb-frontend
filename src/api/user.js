@@ -1,4 +1,4 @@
-import api from "../interceptor"
+import api from "../auth/interceptor"
 
 const createUsers = async (body) => {
     const { data: response } = await api.post('/api/v1/users', body)

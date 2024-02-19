@@ -1,18 +1,21 @@
-import React, { useContext, useRef } from 'react'
+import React, { useContext, useEffect, useRef } from 'react'
 
-import { AuthContext } from '../context'
 import { navigate } from 'hookrouter';
 import login from '../api/auth';
+import { AuthContext } from '../auth/auth_context';
 
 const Login = () => {
   const authContext = useContext(AuthContext)
-
   const usernameRef = useRef('')
   const passwordRef = useRef('')
 
-  if (authContext.isLoggedIn) {
-    navigate('/');
-  }
+  useEffect(() => {
+    if (authContext.isLoggedIn) {
+      navigate('/');
+    }
+  }, [authContext.isLoggedIn])
+
+
   const loginHandler = async (e) => {
     e.preventDefault()
     const { data: responseData } = await login({
