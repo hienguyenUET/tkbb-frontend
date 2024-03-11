@@ -7,8 +7,6 @@ const createUsers = async (body) => {
 }
 
 const getUsers = async () => {
-    console.log(localStorage.getItem('token'))
-
     const { data: response } = await api.get('/api/v1/users')
 
     return response;

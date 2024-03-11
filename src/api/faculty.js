@@ -1,7 +1,7 @@
 import api from "../auth/interceptor";
 
 const getFaculties = async () => {
-    const { data: response } = await api.get('/api/v1/users/faculties');
+    const { data: response } = await api.get('/api/v1/faculty/faculties');
     return response
 }
 

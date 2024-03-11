@@ -17,7 +17,8 @@ function CustomGridToolbar(props) {
     padding: '3px',
     ...commonStyle
   }
-  console.log(props);
+  useEffect(() => {
+  }, [props])
   return (
     <div>
       <div>
@@ -25,7 +26,7 @@ function CustomGridToolbar(props) {
         <select style={selectStyle} value={props.faculty} onChange={props.facultyChangeFn}>
           <option value={0}>--Any faculty--</option>
           {
-            props.faculties.map(f => (<option value={f.faculty}>{f.faculty}</option>))
+            props.faculties.map(f => (<option value={f.id}>{f.facultyName}</option>))
           }
         </select>
         <select style={selectStyle} value={props.category} onChange={props.categoryChangeFn}>
@@ -43,7 +44,7 @@ function CustomGridToolbar(props) {
 }
 
 export default function Report() {
-  const [faculties, setFaculties] = useState(['Khoa CNTT', 'Khoa DTVT']);
+  const [faculties, setFaculties] = useState([]);
   const [categories, setCategories] = useState(['ISI Q1/Q2', 'ISI Q3/Q4']);
   const [faculty, setFaculty] = useState(null);
   const [category, setCategory] = useState(null);
@@ -102,7 +103,6 @@ export default function Report() {
                   startDateChangeFn: (evt) => setStartDate(evt.target.value),
                   endDateChangeFn: (evt) => setEndDate(evt.target.value),
                   applyFilterFn: () => {
-                    console.log(faculty, category, startDate, endDate);
                     reloadTable({ faculty, category, startDate, endDate });
                   }
                 }

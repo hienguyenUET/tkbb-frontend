@@ -6,6 +6,7 @@ export const AuthContext = createContext({
   getUsername: () => {
     console.log('getUsername')
   },
+  getJwtTokenFromLocalStorage: () => {},
   setUsername: () => console.log('setUsername'),
   token: null,
   login: () => { },
@@ -42,6 +43,10 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('token', jwt)
   }
 
+  const getJwtTokenFromLocalStorage = () => {
+    return localStorage.getItem('token');
+  }
+
   const setUsername = (username) => {
     localStorage.setItem('username', username);
   }
@@ -49,17 +54,17 @@ export const AuthProvider = ({ children }) => {
     return localStorage.getItem('username');
   }
   const setRole = (role) => {
-    localStorage.setItem('role', role)
+    localStorage.setItem('role', JSON.stringify(role))
   }
   const getRole = (role) => {
-    return localStorage.getItem('role');
+    return JSON.parse(localStorage.getItem("role"));
   }
   useEffect(() => {
     login(localStorage.getItem('token'))
   }, [])
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout, setUsername, getUsername, setRole, getRole }}>
+    <AuthContext.Provider value={{ isLoggedIn, login, logout, setUsername, getUsername, setRole, getRole, getJwtTokenFromLocalStorage }}>
       <AxiosErrorHandling>
         {children}
       </AxiosErrorHandling>

@@ -10,8 +10,10 @@ import GetAppIcon from '@material-ui/icons/GetApp'
 import Modal from 'react-bootstrap/Modal'
 import { crawlUsers, createUsers, deleteUser, getUsers, updateUser, uploadUsers } from '../api/user'
 import { crawlArticleData } from '../api/article';
+import { getFaculties } from '../api/faculty'
 
 const Dashboard = props => {
+  const [faculties, setFaculties] = useState(null);
   const [users, setUsers] = useState([]);
   const [rows, setRows] = useState([])
   let [showError, setShowError] = useState(false);
@@ -43,7 +45,6 @@ const Dashboard = props => {
 
   const reloadUser = async () => {
     const { data: users } = await getUsers()
-    console.log(showError);
     if (showError) {
       setRows(users.filter(u => (u.crawlStatus && u.crawlStatus.length)));
       setUsers(users.filter(u => (u.crawlStatus && u.crawlStatus.length)));
@@ -52,6 +53,11 @@ const Dashboard = props => {
       setRows(users);
       setUsers(users);
     }
+  }
+
+  const getFacultyList = async () => {
+    const {data: faculties} = await getFaculties()
+    setFaculties(faculties)
   }
 
   const handleCreate = async () => {
@@ -75,7 +81,7 @@ const Dashboard = props => {
       editable: true,
       renderCell: (params) => (
         <div style={{width: '100%', overflow:' hidden', textOverflow: 'ellipsis'}} 
-          title={params.getValue('faculty')}>{params.getValue('faculty')}
+          title={params.getValue('facultyInfo').id}>{params.getValue('facultyInfo').facultyName}
         </div>
       ),
       width: 120,

@@ -5,6 +5,8 @@ const login = async ({ username, password }) => {
     const { data: response } = await api.post('/api/v1/login', {
         username,
         password,
+    }).catch((error) => {
+        console.log(error);
     })
 
     toast.success("Login successfully", { autoClose: 1000 })
