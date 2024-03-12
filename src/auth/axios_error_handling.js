@@ -13,14 +13,6 @@ const AxiosErrorHandling = ({ children }) => {
 		return config
 	});
 
-	api.interceptors.request.use(
-		request => {
-			loadingToastId = toast.info('Loading...', {
-				toastId: authContext.getJwtTokenFromLocalStorage()
-			})
-			return request
-		}
-	)
 
 	api.interceptors.response.use(
 		success => {
@@ -48,6 +40,18 @@ const AxiosErrorHandling = ({ children }) => {
 			return Promise.reject(error)
 		}
 	)
+
+	useEffect(() => {
+		api.interceptors.request.use(
+			request => {
+				loadingToastId = toast.info('Loading...', {
+					toastId: 0
+				})
+				return request
+			}
+		)
+	}, [])
+
 	return children
 }
 
