@@ -27,7 +27,7 @@ const Menu = () => {
               <img src="/dist/img/user2-160x160.jpg" className="img-circle elevation-2" alt="User" />
             </div> : <div style={{ width: '34px', height: '34px' }}></div>}
             <div className="info">
-              {authContext.isLoggedIn ? (<A href="/" className="d-block">{authContext.getUsername()}</A>) : (<A href="/login" className="d-block"><i className="nav-icon fas fa-sign-in-alt" /><span style={{ marginLeft: '0.5em' }}>Login</span></A>)}
+              {authContext.isLoggedIn ? (<A href="/" className="d-block">{authContext.getUserData().name}</A>) : (<A href="/login" className="d-block"><i className="nav-icon fas fa-sign-in-alt" /><span style={{ marginLeft: '0.5em' }}>Login</span></A>)}
             </div>
           </div>
 

@@ -7,6 +7,8 @@ export const AuthContext = createContext({
     console.log('getUsername')
   },
   getJwtTokenFromLocalStorage: () => {},
+  setUserData: () => {},
+  getUserData: () => {},
   setUsername: () => console.log('setUsername'),
   token: null,
   login: () => { },
@@ -36,7 +38,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   const isHavingJwtToken = (jwt) => {
-    return jwt ? true : false;
+    return !!jwt;
   }
 
   const setJwtTokenToLocalStorage = (jwt) => {
@@ -47,12 +49,25 @@ export const AuthProvider = ({ children }) => {
     return localStorage.getItem('token');
   }
 
+  const setUserData = (userData) => {
+    localStorage.setItem("userData", JSON.stringify(userData))
+  }
+
+  const getUserData = () => {
+    return JSON.parse(localStorage.getItem("userData"));
+  }
+
   const setUsername = (username) => {
     localStorage.setItem('username', username);
   }
   const getUsername = () => {
     return localStorage.getItem('username');
   }
+
+  const getName = () => {
+    return localStorage.getItem("")
+  }
+
   const setRole = (role) => {
     localStorage.setItem('role', JSON.stringify(role))
   }
@@ -60,11 +75,11 @@ export const AuthProvider = ({ children }) => {
     return JSON.parse(localStorage.getItem("role"));
   }
   useEffect(() => {
-    login(localStorage.getItem('token'))
+    login(localStorage.getItem('token')).then(r => null)
   }, [])
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout, setUsername, getUsername, setRole, getRole, getJwtTokenFromLocalStorage }}>
+    <AuthContext.Provider value={{ isLoggedIn, login, logout, setUsername, getUsername, setRole, getRole, getJwtTokenFromLocalStorage, setUserData, getUserData }}>
       <AxiosErrorHandling>
         {children}
       </AxiosErrorHandling>
