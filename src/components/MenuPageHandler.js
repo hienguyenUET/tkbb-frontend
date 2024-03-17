@@ -39,6 +39,10 @@ const MenuPageHandler = () => {
 		{
 			component: MenuComponents.theoDoiLayDuLieuPage,
 			rolePermissionIds: [ROLE.CONTENT_ADMIN.ID, ROLE.ADMIN.ID]
+		},
+		{
+			component: MenuComponents.quanLyNguoiDungPage,
+			rolePermissionIds: [ROLE.ADMIN.ID]
 		}
 	]
 

@@ -1,5 +1,5 @@
-import { A } from 'hookrouter'
-import { smallStyle } from './Menu'
+import {A} from 'hookrouter'
+import {smallStyle} from './Menu'
 
 export const soLieuThongKe = () => {
 	return <li className="nav-item has-treeview" key="so-lieu-thong-ke">
@@ -126,6 +126,15 @@ export const theoDoiLayDuLieuPage = () => {
 		<A href="/jobs" className="nav-link">
 			<i className="nav-icon fas fa-tachometer-alt" />
 			<p>Theo dõi lấy dữ liệu</p>
+		</A>
+	</li>
+}
+
+export const quanLyNguoiDungPage = () => {
+	return <li className="nav-item">
+		<A href="/user-management" className="nav-link">
+			<i className="nav-icon fas fa-user"/>
+			<p>Quản lý người dùng</p>
 		</A>
 	</li>
 }
