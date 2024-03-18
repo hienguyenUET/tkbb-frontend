@@ -7,10 +7,13 @@ import IconButton from "@material-ui/core/IconButton";
 import {Dehaze} from "@material-ui/icons";
 import {ClickAwayListener, Menu, MenuItem} from "@material-ui/core";
 import CustomToolbar from "./CustomToolbar";
+import {getFaculties} from "../../api/faculty";
 
 export default function UserManagement() {
     const [anchorEl, setAnchorEl] = useState();
     const [open: boolean, setOpen] = useState(false);
+    const [facultyList, setFacultyList] = useState([]);
+    const [roleList, setRoleList] = useState([]);
     const handleClick = (event: React.MouseEvent<HTMLElement>): void => {
         setAnchorEl(event.currentTarget);
         setOpen(true);
@@ -77,6 +80,14 @@ export default function UserManagement() {
         return await UserManagementClient.getAccountList()
     }
 
+    const getFacultyList = async () => {
+        return await getFaculties();
+    }
+
+    const getRoleList = async () => {
+        return await UserManagementClient.getRoleList();
+    }
+
     const mapDataRow = (dataList) => {
         if (!dataList || !dataList.data || dataList.data.length === 0) {
             setRows([]);
@@ -111,7 +122,9 @@ export default function UserManagement() {
     }
 
     useEffect(() => {
-        getAccountList().then(data => mapDataRow(data))
+        getAccountList().then(accountListResponse => mapDataRow(accountListResponse));
+        getFacultyList().then(facultyListResponse => setFacultyList(facultyListResponse));
+        getRoleList().then(roleListResponse => setRoleList(roleListResponse));
     }, [])
 
     return (
@@ -138,8 +151,15 @@ export default function UserManagement() {
                         <div style={{height: 700, width: '100%', backgroundColor: '#fff'}}>
                             <DataGrid
                                 rows={rows}
+                                columns={columns}
                                 components={{Toolbar: CustomToolbar}}
-                                columns={columns}/>
+                                componentsProps={{
+                                    toolbar: {
+                                        facultyList,
+                                        roleList
+                                    }
+                                }}
+                            />
                         </div>
                     </div>
                 </div>

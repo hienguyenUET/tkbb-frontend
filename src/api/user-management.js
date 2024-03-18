@@ -7,3 +7,8 @@ export const getAccountList = async (category) => {
     return response;
 }
 
+export const getRoleList = async () => {
+    const {data: response} = await api.get(`/api/v1/${ROUTE_LINK}/role/search`);
+
+    return response;
+}
