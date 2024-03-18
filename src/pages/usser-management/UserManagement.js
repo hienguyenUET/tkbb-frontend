@@ -1,21 +1,23 @@
 import {A} from 'hookrouter'
 import React, {useContext, useEffect, useState} from "react";
-import * as UserManagementClient from '../api/user-management'
-import {AuthContext} from "../auth/auth_context";
+import * as UserManagementClient from '../../api/user-management'
+import {AuthContext} from "../../auth/auth_context";
 import {DataGrid, GridCellParams, GridColDef, GridRowProps} from "@material-ui/data-grid";
 import IconButton from "@material-ui/core/IconButton";
 import {Dehaze} from "@material-ui/icons";
 import {ClickAwayListener, Menu, MenuItem} from "@material-ui/core";
+import CustomToolbar from "./CustomToolbar";
 
 export default function UserManagement() {
     const [anchorEl, setAnchorEl] = useState();
-    const open: boolean = Boolean(anchorEl);
+    const [open: boolean, setOpen] = useState(false);
     const handleClick = (event: React.MouseEvent<HTMLElement>): void => {
         setAnchorEl(event.currentTarget);
+        setOpen(true);
     };
     const handleClose = (): void => {
-        console.log('come');
         setAnchorEl(null);
+        setOpen(false);
     };
     let [showError, setShowError] = useState(false);
     const [rows, setRows] = useState([])
@@ -122,7 +124,7 @@ export default function UserManagement() {
                         </div>
                         <div className="col-sm-6">
                             <ol className="breadcrumb float-sm-right nav-links">
-                                <li className="breadcrumb-item"><A href="/">Home</A></li>
+                                <li className="breadcrumb-item"><A href="/public">Home</A></li>
                                 <li className="breadcrumb-item active">User Management</li>
                             </ol>
                         </div>
@@ -136,6 +138,7 @@ export default function UserManagement() {
                         <div style={{height: 700, width: '100%', backgroundColor: '#fff'}}>
                             <DataGrid
                                 rows={rows}
+                                components={{Toolbar: CustomToolbar}}
                                 columns={columns}/>
                         </div>
                     </div>
