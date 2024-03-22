@@ -1,0 +1,27 @@
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: auto;
+    overflow: scroll;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+    white-space: nowrap; /* Prevents text wrapping */
+}
+
+tr {
+    border-bottom: #000 solid 1px;
+}
+
+/*td {*/
+/*    padding: 8px;*/
+/*    text-align: left;*/
+/*    white-space: nowrap; !* Prevents text wrapping *!*/
+/*}*/
+
+.table-container {
+    display: flex;
+    max-height: 100px;
+}

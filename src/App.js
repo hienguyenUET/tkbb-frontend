@@ -20,7 +20,7 @@ import Scholars from './pages/Scholars'
 import { AuthProvider } from './auth/auth_context'
 import { useRoutes, usePath } from 'hookrouter'
 import Home from './components/Home';
-import UserManagement from "./pages/usser-management/UserManagement";
+import UserManagement from "./pages/user-management/UserManagement";
 
 const routes = {
   '/': () => <Yearly />,
