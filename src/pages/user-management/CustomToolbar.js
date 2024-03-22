@@ -5,7 +5,6 @@ import {Fragment, useEffect, useState} from "react";
 import AccountActionModal from "./AccountActionModal";
 
 
-
 const CustomToolbar = (props) => {
     const [facultyList, setFacultyList] = useState([]);
     const [roleList, setRoleList] = useState([]);
@@ -51,6 +50,7 @@ const CustomToolbar = (props) => {
                                     facultyList={facultyList}
                                     title={"Add New Account"}
                                     action={"add"}
+                                    handleActionSuccess={props.handleActionSuccess}
                                     roleList={roleList}
                                     closeDialog={closeDialog}></AccountActionModal>
             </Fragment>

@@ -17,6 +17,11 @@ export const updateAccount = async (updateAccountForm): Promise<any> => {
     return response;
 }
 
+export const deleteAccount = async (id): Promise<any> => {
+    const {status: response} = await api.delete(`/api/v1/${ROUTE_LINK}/delete-account/${id}`);
+    return response;
+}
+
 export const getRoleList = async () => {
     const {data: response} = await api.get(`/api/v1/${ROUTE_LINK}/role/search`);
 

@@ -85,17 +85,24 @@ const AccountActionModal = (props) => {
             isError: false
         });
     }
+
+    const handleActionSuccess = (): void => {
+        props.handleActionSuccess();
+    }
+
     const submitForm = (addForm): void => {
         if (props.actionType === 'edit') {
             UserManagementClient.updateAccount(addForm).then(response => {
                 if (response === 200) {
                     closeDialog();
+                    handleActionSuccess();
                 }
             });
         } else {
             UserManagementClient.addNewAccount(addForm).then(response => {
                 if (response === 200) {
                     closeDialog();
+                    handleActionSuccess();
                 }
             });
         }

@@ -23,7 +23,8 @@ export default function UserManagement() {
         {
             field: 'index',
             headerName: 'No',
-            width: 80
+            width: 80,
+            sortable: false
         },
         {
             field: 'username',
@@ -35,6 +36,11 @@ export default function UserManagement() {
             headerName: 'Password',
             flex: true,
 
+        },
+        {
+            field: 'email',
+            headerName: 'Email',
+            flex: true,
         },
         {
             field: 'name',
@@ -77,7 +83,7 @@ export default function UserManagement() {
                             <Edit/>
                             Edit
                         </MenuItem>
-                        <MenuItem onClick={handleClose} style={{
+                        <MenuItem onClick={deleteAccount} style={{
                             display: 'flex',
                             gap: '16px'
                         }}>
@@ -107,6 +113,20 @@ export default function UserManagement() {
     const handleClose = (): void => {
         setAnchorEl(null);
         setAccountInfoForAction(null);
+    }
+
+    const deleteAccount = (event): void => {
+        event.preventDefault();
+        if (accountInfoForAction) {
+            UserManagementClient.deleteAccount(accountInfoForAction.id).then(response => {
+                if (response === 200) {
+                    getAccountList().then(accountListResponse => mapDataRow(accountListResponse));
+                    setAnchorEl(null);
+                } else {
+                    setShowError(true);
+                }
+            })
+        }
     }
 
     const getAccountList = async () => {
@@ -156,7 +176,6 @@ export default function UserManagement() {
     const closeDialog = (): void => {
         setAccountInfoForAction(null);
         setOpenEditDialog(false);
-        getAccountList().then(accountListResponse => mapDataRow(accountListResponse));
     }
 
     const handleNullValue = (rowData, name) => {
@@ -164,6 +183,10 @@ export default function UserManagement() {
             return null;
         }
         return rowData[name];
+    }
+
+    const handleActionSuccess = () => {
+        getAccountList().then(accountListResponse => mapDataRow(accountListResponse));
     }
 
     useEffect(() => {
@@ -198,11 +221,14 @@ export default function UserManagement() {
                                 rows={rows}
                                 columns={columns}
                                 pageSize={10}
+                                checkboxSelection
+                                isRowSelectable={false}
                                 components={{Toolbar: CustomToolbar}}
                                 componentsProps={{
                                     toolbar: {
+                                        handleActionSuccess,
                                         facultyList,
-                                        roleList,
+                                        roleList
                                     }
                                 }}
                             />
@@ -210,6 +236,7 @@ export default function UserManagement() {
                                                 title={"Edit Account Info"}
                                                 actionType={"edit"}
                                                 accountInfo={accountInfoForAction}
+                                                handleActionSuccess={handleActionSuccess}
                                                 roleList={roleList && roleList.data ? roleList.data : []}
                                                 isOpenDialog={isOpenEditDialog}
                                                 closeDialog={closeDialog}/>
