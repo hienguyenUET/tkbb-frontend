@@ -1,4 +1,4 @@
-import api from "../auth/interceptor";
+import api from "../auth/api-setup";
 
 const ROUTE_LINK = 'user-management'
 

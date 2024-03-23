@@ -27,10 +27,10 @@ export const ROLE = {
 export const AuthUtils = () => {
 	const authContext = useContext(AuthContext);
 	const getUserRoleID = () => {
-		if (!authContext.isLoggedIn || !authContext.getRole()) {
+		if (!authContext.isLoggedIn || !authContext.getUserData().role) {
 			return ROLE.ANONYMOUS.ID;
 		}
-		return authContext.getRole().id;
+		return authContext.getUserData().role.id;
 	}
 	const isAdminAccount = () => {
 		return getUserRoleID() === ROLE.ADMIN.ID;

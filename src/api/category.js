@@ -1,4 +1,4 @@
-import api from "../auth/interceptor";
+import api from "../auth/api-setup";
 
 const createCategory = async (category) => {
     const { data: response } = await api.post(`/api/v1/category`, category);

@@ -22,9 +22,8 @@ const Login = () => {
       username: usernameRef.current.value,
       password: passwordRef.current.value,
     })
-    const { token, accountCredential } = responseData;
-    authContext.setUserData(accountCredential)
-    authContext.setRole(accountCredential.role);
+    const { token, userInfo } = responseData;
+    authContext.setUserData(userInfo)
     authContext.login(token);
     navigate('/');
   }

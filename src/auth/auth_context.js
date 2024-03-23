@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from 'react';
-import AxiosErrorHandling from './axios_error_handling';
+import Interceptor from './interceptor';
 
 export const AuthContext = createContext({
   isLoggedIn: false,
@@ -17,8 +17,7 @@ export const AuthContext = createContext({
 
 export function removeLocalStorage() {
   localStorage.removeItem('token');
-  localStorage.removeItem('username');
-  localStorage.removeItem('role');
+  localStorage.removeItem('userData');
 }
 
 export const AuthProvider = ({ children }) => {
@@ -64,25 +63,15 @@ export const AuthProvider = ({ children }) => {
     return localStorage.getItem('username');
   }
 
-  const getName = () => {
-    return localStorage.getItem("")
-  }
-
-  const setRole = (role) => {
-    localStorage.setItem('role', JSON.stringify(role))
-  }
-  const getRole = (role) => {
-    return JSON.parse(localStorage.getItem("role"));
-  }
   useEffect(() => {
     login(localStorage.getItem('token')).then(r => null)
   }, [])
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout, setUsername, getUsername, setRole, getRole, getJwtTokenFromLocalStorage, setUserData, getUserData }}>
-      <AxiosErrorHandling>
+    <AuthContext.Provider value={{ isLoggedIn, login, logout, setUsername, getUsername,  getJwtTokenFromLocalStorage, setUserData, getUserData }}>
+      <Interceptor>
         {children}
-      </AxiosErrorHandling>
+      </Interceptor>
     </AuthContext.Provider>
   )
 }

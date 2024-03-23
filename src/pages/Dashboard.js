@@ -80,7 +80,7 @@ const Dashboard = props => {
   }
 
   const userColumns = [
-    { field: 'id', headerName: 'ID', width: 70 },
+    { field: 'id', headerName: 'ID', width: 100 },
     {
       field: 'faculty',
       headerName: 'Faculty',
