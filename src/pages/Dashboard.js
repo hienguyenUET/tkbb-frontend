@@ -59,6 +59,12 @@ const Dashboard = props => {
     const {data: faculties} = await getFaculties()
     setFaculties(faculties)
   }
+  const getRowParamValue = (param, fieldName) => {
+    if (!param) {
+      return null;
+    }
+    return param.row[fieldName];
+  }
 
   const handleCreate = async () => {
     const body = {
@@ -81,7 +87,7 @@ const Dashboard = props => {
       editable: true,
       renderCell: (params) => (
         <div style={{width: '100%', overflow:' hidden', textOverflow: 'ellipsis'}} 
-          title={params.getValue('facultyInfo').id}>{params.getValue('facultyInfo').facultyName}
+          title={getRowParamValue(params,'facultyInfo').id}>{getRowParamValue(params,'facultyInfo').facultyName}
         </div>
       ),
       width: 120,
@@ -90,14 +96,14 @@ const Dashboard = props => {
       field: 'fullName',
       headerName: 'Full name',
       renderCell: (params) => {
-        let crawlStatus = params.getValue('crawlStatus');
+        let crawlStatus = getRowParamValue(params,'crawlStatus');
         return (<div style={{
             width: '100%', 
             overflow:' hidden', 
             textOverflow: 'ellipsis', 
             color: (crawlStatus && crawlStatus.length)?'red':'inherit'
           }} 
-          title={(crawlStatus && crawlStatus.length)?crawlStatus:params.getValue('fullName')}>{params.getValue('fullName')}
+          title={(crawlStatus && crawlStatus.length)?crawlStatus:getRowParamValue(params,'fullName')}>{getRowParamValue(params,'fullName')}
         </div>)
       },
       editable: true,
@@ -109,7 +115,7 @@ const Dashboard = props => {
       headerName: "Eng. name",
       renderCell: (params) => (
         <div style={{width: '100%', overflow:' hidden', textOverflow: 'ellipsis'}} 
-          title={params.getValue('faculty')}>{params.getValue('englishName') && params.getValue('englishName').length ? params.getValue('englishName') : 'N/A'}
+          title={getRowParamValue(params,'faculty')}>{getRowParamValue(params,'englishName') && getRowParamValue(params,'englishName').length ? getRowParamValue(params,'englishName') : 'N/A'}
         </div>
       ),
       width: 120,
@@ -122,7 +128,7 @@ const Dashboard = props => {
       renderCell: (params) => {
         return (
           <div>
-            <a href={params.getValue('gsUrl')}>{params.getValue('gsUrl')}</a>
+            <a href={getRowParamValue(params,'gsUrl')}>{getRowParamValue(params,'gsUrl')}</a>
           </div>
         )
       },
@@ -138,7 +144,7 @@ const Dashboard = props => {
             <Button
               variant="outlined"
               color="primary"
-              onClick={() => handleCrawl(params.getValue('id'))}
+              onClick={() => handleCrawl(getRowParamValue(params,'id'))}
             >
               Crawl {yearWindow} năm
             </Button>
@@ -158,7 +164,7 @@ const Dashboard = props => {
           <div>
             <IconButton
               color="secondary"
-              onClick={handleDeleteUser.bind(this, params.getValue('id'))}
+              onClick={handleDeleteUser.bind(getRowParamValue(params,'id'))}
             >
               <DeleteIcon />
             </IconButton>
@@ -307,7 +313,7 @@ const Dashboard = props => {
                 {/*onEditCellChangeCommitted={handleCellChanged}*/}
             </div>
 
-            <Modal show={show} onHide={handleClose}>
+            <Modal animation={false} show={show} onHide={handleClose}>
               <Modal.Header closeButton>
                 <Modal.Title>Create Authors</Modal.Title>
               </Modal.Header>

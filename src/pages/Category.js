@@ -36,8 +36,8 @@ class Category extends React.Component {
         editable: true,
         renderCell: (params) => {
           return (
-            <div title={params.getValue('description')}>
-              {params.getValue('description')}
+            <div title={this.getRowParamValue(params,'description')}>
+              {this.getRowParamValue(params,'description')}
             </div>
           )
         },
@@ -59,7 +59,7 @@ class Category extends React.Component {
               <IconButton
                 color="secondary"
                 onClick={async () => {
-                  await deleteCategory(params.getValue('id'));
+                  await deleteCategory(this.getRowParamValue(params,'id'));
                   await this.reloadTable();
                 }}
               >
@@ -91,6 +91,10 @@ class Category extends React.Component {
     this.setState({
       rows: categories
     });
+  }
+
+  getRowParamValue(param, fieldName) {
+    return param.row[fieldName];
   }
   componentDidMount() {
     this.reloadTable()

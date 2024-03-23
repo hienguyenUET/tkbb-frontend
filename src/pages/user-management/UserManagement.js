@@ -2,7 +2,7 @@ import {A} from 'hookrouter'
 import React, {useContext, useEffect, useState} from "react";
 import * as UserManagementClient from '../../api/user-management'
 import {AuthContext} from "../../auth/auth_context";
-import {DataGrid, GridCellParams, GridColDef, GridRowProps} from "@material-ui/data-grid";
+import {DataGrid, GridCellParams, GridColDef, GridRowParams, GridRowProps} from "@material-ui/data-grid";
 import IconButton from "@material-ui/core/IconButton";
 import {Delete, Edit, MoreVert} from "@material-ui/icons";
 import {Menu, MenuItem} from "@material-ui/core";
@@ -63,7 +63,7 @@ export default function UserManagement() {
             width: 100,
             sortable: false,
             renderCell: (params: GridCellParams): void => (
-                <div>
+                params.row.id !== authContext.getUserData().id ? (<div>
                     <IconButton aria-haspopup="true"
                                 aria-controls="menu-list-grow"
                                 aria-label="more"
@@ -91,7 +91,7 @@ export default function UserManagement() {
                             Delete
                         </MenuItem>
                     </Menu>
-                </div>
+                </div>) : <div></div>
             )
         }
     ];
@@ -149,11 +149,9 @@ export default function UserManagement() {
         const rowData: GridRowProps[] = [];
         let index = 1;
         tempRowData.forEach(data => {
-            if (data.id !== authContext.getUserData().id) {
-                data.index = index;
-                rowData.push(mapToDto(data));
-                index++;
-            }
+            data.index = index;
+            rowData.push(mapToDto(data));
+            index++;
         })
         setRows(rowData)
     }
@@ -222,7 +220,10 @@ export default function UserManagement() {
                                 columns={columns}
                                 pageSize={10}
                                 checkboxSelection
-                                isRowSelectable={false}
+                                isRowSelectable={(params: GridRowParams): void => (
+                                    params.id !== authContext.getUserData().id
+                                )}
+                                disableSelectionOnClick
                                 components={{Toolbar: CustomToolbar}}
                                 componentsProps={{
                                     toolbar: {
