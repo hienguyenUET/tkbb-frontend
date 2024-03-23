@@ -32,10 +32,10 @@ const AccountActionModal = (props) => {
         value: '',
         isError: false
     });
-    const [passwordController: string, setPasswordController] = useState({
-        value: '',
-        isError: false
-    });
+    // const [passwordController: string, setPasswordController] = useState({
+    //     value: '',
+    //     isError: false
+    // });
     const [nameController: string, setNameController] = useState({
         value: '',
         isError: false
@@ -73,7 +73,7 @@ const AccountActionModal = (props) => {
     const closeDialog = (): void => {
         props.closeDialog();
         resetAddUserInputForm(setUserNameController);
-        resetAddUserInputForm(setPasswordController);
+        // resetAddUserInputForm(setPasswordController);
         resetAddUserInputForm(setNameController);
         resetAddUserInputForm(setEmailController);
         setFacultyController({
@@ -119,12 +119,12 @@ const AccountActionModal = (props) => {
                 isError: true
             });
         }
-        if (!passwordController.value) {
-            isAbleToTakeAction = false;
-            setPasswordController({
-                isError: true
-            });
-        }
+        // if (!passwordController.value) {
+        //     isAbleToTakeAction = false;
+        //     setPasswordController({
+        //         isError: true
+        //     });
+        // }
         if (!nameController.value) {
             isAbleToTakeAction = false;
             setNameController({
@@ -153,7 +153,7 @@ const AccountActionModal = (props) => {
             if (props.actionType === 'edit') {
                 submitForm({
                     username: usernameController.value,
-                    password: passwordController.value,
+                    // password: passwordController.value,
                     name: nameController.value,
                     email: emailController.value,
                     role_id: roleController.value,
@@ -163,7 +163,7 @@ const AccountActionModal = (props) => {
             } else {
                 submitForm({
                     username: usernameController.value,
-                    password: passwordController.value,
+                    // password: passwordController.value,
                     name: nameController.value,
                     email: emailController.value,
                     role_id: roleController.value,
@@ -179,9 +179,9 @@ const AccountActionModal = (props) => {
             setUserNameController({
                 value: accountInfo.username
             });
-            setPasswordController({
-                value: accountInfo.password
-            });
+            // setPasswordController({
+            //     value: accountInfo.password
+            // });
             setNameController({
                 value: accountInfo.name
             });
@@ -230,24 +230,24 @@ const AccountActionModal = (props) => {
                                    type="text">
                         </TextField>
                     </FormControl>
-                    <FormControl>
-                        <TextField required
-                                   id="password"
-                                   margin="dense"
-                                   error={isShowError(passwordController)}
-                                   value={passwordController.value}
-                                   InputLabelProps={{
-                                       shrink: true
-                                   }}
-                                   fullWidth
-                                   autoComplete={"new-password"}
-                                   onChange={(event): void => (handleAddUserInputFormChanges(setPasswordController, event.target.value))}
-                                   helperText={isShowError(passwordController) ? "This field is required" : ''}
-                                   name="password"
-                                   label="Password"
-                                   type="password">
-                        </TextField>
-                    </FormControl>
+                    {/*<FormControl>*/}
+                    {/*    <TextField required*/}
+                    {/*               id="password"*/}
+                    {/*               margin="dense"*/}
+                    {/*               error={isShowError(passwordController)}*/}
+                    {/*               value={passwordController.value}*/}
+                    {/*               InputLabelProps={{*/}
+                    {/*                   shrink: true*/}
+                    {/*               }}*/}
+                    {/*               fullWidth*/}
+                    {/*               autoComplete={"new-password"}*/}
+                    {/*               onChange={(event): void => (handleAddUserInputFormChanges(setPasswordController, event.target.value))}*/}
+                    {/*               helperText={isShowError(passwordController) ? "This field is required" : ''}*/}
+                    {/*               name="password"*/}
+                    {/*               label="Password"*/}
+                    {/*               type="password">*/}
+                    {/*    </TextField>*/}
+                    {/*</FormControl>*/}
                     <FormControl>
                         <TextField required
                                    id="name"

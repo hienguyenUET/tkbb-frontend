@@ -4,66 +4,75 @@ import * as UserManagementClient from '../../api/user-management'
 import {AuthContext} from "../../auth/auth_context";
 import {DataGrid, GridCellParams, GridColDef, GridRowParams, GridRowProps} from "@material-ui/data-grid";
 import IconButton from "@material-ui/core/IconButton";
-import {Delete, Edit, MoreVert} from "@material-ui/icons";
-import {Menu, MenuItem} from "@material-ui/core";
+import {Delete, Edit, MoreVert, Refresh} from "@material-ui/icons";
+import {Dialog, DialogContent, DialogTitle, Menu, MenuItem} from "@material-ui/core";
 import CustomToolbar from "./CustomToolbar";
 import {getFaculties} from "../../api/faculty";
 import AccountActionModal from "./AccountActionModal";
+import {Slide} from "react-toastify";
 
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 export default function UserManagement() {
     const [facultyList, setFacultyList] = useState([]);
     const [roleList, setRoleList] = useState([]);
     const [accountInfoForAction, setAccountInfoForAction] = useState(null);
     const [isOpenEditDialog, setOpenEditDialog] = useState(false);
+    const [isOpenActionConfirmDialog, setOpenActionConfirmDialog] = useState(false);
+    const [dialogElement, setDialogElement] = useState({
+        title: '', content: '', onOkAction: () => {
+        }, onCancelAction: () => {
+        },
+    });
     const [anchorEl, setAnchorEl] = useState(null);
     let [showError, setShowError] = useState(false);
     const [rows, setRows] = useState([])
     const authContext = useContext(AuthContext)
-    const columns: GridColDef[] = [
+    const columns: GridColDef[] = [{
+        field: 'index', headerName: 'No', width: 80, sortable: false
+    }, {
+        field: 'username', headerName: 'Username', flex: true,
+    }, // {
+        //     field: 'password',
+        //     headerName: 'Password',
+        //     width: 200,
+        //     renderCell: (params: GridCellParams): void => (
+        //         <div style={{
+        //             display: "flex",
+        //             flexDirection: "row",
+        //             width: "100%",
+        //             justifyContent: "space-between",
+        //         }}>
+        //             {params.row.isShowPassword ? params.row.password : '********'}
+        //
+        //             <Tooltip title={!params.row.isShowPassword ? 'Show password' : 'Hide password'}>
+        //                 <IconButton onClick={(): void => {
+        //                     const tempRows = rows;
+        //                     tempRows[params.row.index - 1].isShowPassword = !params.row.isShowPassword;
+        //                     setRows([...tempRows]);
+        //                 }}>
+        //                     {!params.row.isShowPassword ?
+        //                         <Visibility/> : <VisibilityOff/>}
+        //                 </IconButton>
+        //             </Tooltip>
+        //         </div>
+        //     )
+        // },
         {
-            field: 'index',
-            headerName: 'No',
-            width: 80,
-            sortable: false
-        },
-        {
-            field: 'username',
-            headerName: 'Username',
-            flex: true,
-        },
-        {
-            field: 'password',
-            headerName: 'Password',
-            flex: true,
-
-        },
-        {
-            field: 'email',
-            headerName: 'Email',
-            flex: true,
-        },
-        {
-            field: 'name',
-            headerName: 'Name',
-            flex: true,
-        },
-        {
-            field: 'role',
-            headerName: 'Role',
-            flex: true
-        },
-        {
-            field: 'faculty',
-            headerName: 'Faculty',
-            flex: true,
-        },
-        {
+            field: 'email', headerName: 'Email', flex: true,
+        }, {
+            field: 'name', headerName: 'Name', flex: true,
+        }, {
+            field: 'role', headerName: 'Role', flex: true
+        }, {
+            field: 'faculty', headerName: 'Faculty', flex: true,
+        }, {
             field: 'action',
             headerName: 'Action',
             width: 100,
             sortable: false,
-            renderCell: (params: GridCellParams): void => (
-                params.row.id !== authContext.getUserData().id ? (<div>
+            renderCell: (params: GridCellParams): void => (params.row.id !== authContext.getUserData().id ? (<div>
                     <IconButton aria-haspopup="true"
                                 aria-controls="menu-list-grow"
                                 aria-label="more"
@@ -77,24 +86,90 @@ export default function UserManagement() {
                         <MenuItem onClick={(event): void => {
                             editAccountInfo(event)
                         }} style={{
-                            display: 'flex',
-                            gap: '16px'
+                            display: 'flex', gap: '16px'
                         }}>
                             <Edit/>
                             Edit
                         </MenuItem>
-                        <MenuItem onClick={deleteAccount} style={{
-                            display: 'flex',
-                            gap: '16px'
+                        <MenuItem onClick={openResetPasswordDialog} style={{
+                            display: 'flex', gap: '16px'
+                        }}>
+                            <Refresh/>
+                            Reset Password
+                        </MenuItem>
+                        <MenuItem onClick={openDeleteDialog} style={{
+                            display: 'flex', gap: '16px'
                         }}>
                             <Delete/>
                             Delete
                         </MenuItem>
                     </Menu>
-                </div>) : <div></div>
-            )
+                    <Dialog open={isOpenActionConfirmDialog}
+                            keepMounted>
+                        <DialogTitle>{dialogElement.title}</DialogTitle>
+                        <DialogContent>
+                            <div>
+                                {dialogElement.content}
+                            </div>
+                            <div style={{
+                                display: 'flex', justifyContent: 'flex-end', gap: '16px', marginTop: '16px'
+                            }}>
+                                <button className="btn btn-secondary"
+                                        onClick={dialogElement.onCancelAction}>Cancel
+                                </button>
+                                <button className="btn btn-danger" onClick={dialogElement.onOkAction}>OK</button>
+                            </div>
+                        </DialogContent>
+                    </Dialog>
+                </div>) : <div></div>)
+        }];
+
+    const openDeleteDialog = (event): void => {
+        event.preventDefault();
+        if (accountInfoForAction) {
+            setOpenActionConfirmDialog(true);
+            setDialogElement({
+                title: 'Delete Account',
+                content: 'Are you sure to delete this account?',
+                onOkAction: deleteAccount,
+                onCancelAction: closeActionConfirmDialog
+            })
+            setAnchorEl(null);
         }
-    ];
+    }
+
+    const openResetPasswordDialog = (event): void => {
+        event.preventDefault();
+        if (accountInfoForAction) {
+            setOpenActionConfirmDialog(true);
+            setAnchorEl(null);
+            setDialogElement({
+                title: 'Reset Password',
+                content: 'Are you sure to reset password for this account?',
+                onOkAction: resetPassword,
+                onCancelAction: closeActionConfirmDialog
+            })
+        }
+    }
+
+    const resetPassword = (event): void => {
+        event.preventDefault();
+        if (accountInfoForAction) {
+            setOpenActionConfirmDialog(false);
+            UserManagementClient.resetPassword({id: accountInfoForAction.id}).then(response => {
+                if (response === 200) {
+                    getAccountList().then(accountListResponse => mapDataRow(accountListResponse));
+                    setAnchorEl(null);
+                } else {
+                    setShowError(true);
+                }
+            })
+        }
+    }
+
+    const closeActionConfirmDialog = (): void => {
+        setOpenActionConfirmDialog(false);
+    }
 
     const editAccountInfo = (event): void => {
         event.preventDefault();
@@ -117,6 +192,7 @@ export default function UserManagement() {
 
     const deleteAccount = (event): void => {
         event.preventDefault();
+        setOpenActionConfirmDialog(false);
         if (accountInfoForAction) {
             UserManagementClient.deleteAccount(accountInfoForAction.id).then(response => {
                 if (response === 200) {
@@ -163,7 +239,7 @@ export default function UserManagement() {
             name: handleNullValue(rowData, 'name'),
             email: handleNullValue(rowData, 'email'),
             username: handleNullValue(rowData, 'username'),
-            password: handleNullValue(rowData, 'password'),
+            password: handleNullValue(rowData, 'password'), // isShowPassword: false,
             faculty: rowData ? handleNullValue(rowData.facultyInfo, 'facultyName') : '',
             role: rowData ? handleNullValue(rowData.role, 'roleName') : '',
             roleId: rowData ? handleNullValue(rowData, "role_id") : -1,
@@ -193,8 +269,7 @@ export default function UserManagement() {
         getRoleList().then(roleListResponse => setRoleList(roleListResponse));
     }, [])
 
-    return (
-        <div className="content-wrapper">
+    return (<div className="content-wrapper">
             <div className="content-header">
                 <div className="container-fluid">
                     <div className="row mb-2">
@@ -220,16 +295,12 @@ export default function UserManagement() {
                                 columns={columns}
                                 pageSize={10}
                                 checkboxSelection
-                                isRowSelectable={(params: GridRowParams): void => (
-                                    params.id !== authContext.getUserData().id
-                                )}
+                                isRowSelectable={(params: GridRowParams): void => (params.id !== authContext.getUserData().id)}
                                 disableSelectionOnClick
                                 components={{Toolbar: CustomToolbar}}
                                 componentsProps={{
                                     toolbar: {
-                                        handleActionSuccess,
-                                        facultyList,
-                                        roleList
+                                        handleActionSuccess, facultyList, roleList
                                     }
                                 }}
                             />
@@ -245,6 +316,5 @@ export default function UserManagement() {
                     </div>
                 </div>
             </section>
-        </div>
-    )
+        </div>)
 }
