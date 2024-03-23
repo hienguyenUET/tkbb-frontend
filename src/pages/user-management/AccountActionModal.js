@@ -42,14 +42,15 @@ const AccountActionModal = (props) => {
     });
     const [emailController: string, setEmailController] = useState({
         value: '',
-        isError: false
+        isRequiredError: false,
+        isInvalidFormat: false
     });
     const [roleController: number, setRoleController] = useState({
-        value: 0,
+        value: -1,
         isError: false
     })
     const [facultyController: number, setFacultyController] = useState({
-        value: 0,
+        value: -1,
         isError: false
     })
     const isValidEmail = (email): boolean => {
@@ -77,11 +78,11 @@ const AccountActionModal = (props) => {
         resetAddUserInputForm(setNameController);
         resetAddUserInputForm(setEmailController);
         setFacultyController({
-            value: 0,
+            value: -1,
             isError: false
         });
         setRoleController({
-            value: 0,
+            value: -1,
             isError: false
         });
     }
@@ -131,46 +132,60 @@ const AccountActionModal = (props) => {
                 isError: true
             });
         }
-        if (!isValidEmail(emailController.value)) {
+        if (!emailController.value) {
             isAbleToTakeAction = false;
             setEmailController({
-                isError: true
+                isRequiredError: true
+            })
+        } else if (!isValidEmail(emailController.value)) {
+            isAbleToTakeAction = false;
+            setEmailController({
+                isInvalidFormat: true
             })
         }
-        if (!facultyController.value) {
+
+        if (isDropdownValueIsNull(facultyController) && !isDropdownValueIsNull(roleController) && !isAddingAdminOrContentAdminAccount()) {
             isAbleToTakeAction = false;
             setFacultyController({
                 isError: true
             });
         }
-        if (!roleController.value) {
+        if (!roleController.value || roleController.value === -1) {
             isAbleToTakeAction = false;
             setRoleController({
                 isError: true
             });
         }
         if (isAbleToTakeAction) {
+            const actionForm = {
+                username: usernameController.value,
+                // password: passwordController.value,
+                name: nameController.value,
+                email: emailController.value,
+                role_id: roleController.value,
+            }
+            if (!isAddingAdminOrContentAdminAccount()) {
+                actionForm.faculty_id = facultyController.value;
+            }
+
             if (props.actionType === 'edit') {
-                submitForm({
-                    username: usernameController.value,
-                    // password: passwordController.value,
-                    name: nameController.value,
-                    email: emailController.value,
-                    role_id: roleController.value,
-                    faculty_id: facultyController.value,
-                    id: props.accountInfo.id
-                });
+                actionForm.id = props.accountInfo.id;
+                submitForm(actionForm);
             } else {
-                submitForm({
-                    username: usernameController.value,
-                    // password: passwordController.value,
-                    name: nameController.value,
-                    email: emailController.value,
-                    role_id: roleController.value,
-                    faculty_id: facultyController.value
-                });
+                submitForm(actionForm);
             }
         }
+    }
+
+    const isDropdownValueIsNull = (dropdownController) => {
+        return dropdownController.value === undefined || dropdownController.value === null || dropdownController.value === -1;
+    }
+
+    const isAddingAdminOrContentAdminAccount = (): boolean => {
+        if (isDropdownValueIsNull(roleController)) {
+            return false;
+        }
+        return roleController.value === 1 || roleController.value === 2;
     }
 
     const setFormFieldValue = (): void => {
@@ -197,12 +212,59 @@ const AccountActionModal = (props) => {
         }
     }
 
+    const handleRoleChange = (newValue): void => {
+        if (isAddingAdminOrContentAdminAccount()) {
+            setFacultyController({
+                value: -1,
+                isError: false
+            });
+        }
+        handleAddUserInputFormChanges(setRoleController, newValue);
+    }
+
+    const renderFacultyDropdown = (): JSX.Element => {
+        if (!isAddingAdminOrContentAdminAccount()) {
+            return (
+                <FormControl error={isShowError(facultyController)}>
+                    <InputLabel required id="faculty" shrink>Faculty</InputLabel>
+                    <Select label="Faculty"
+                            id="faculty"
+                            value={facultyController.value}
+                            onChange={event => (handleAddUserInputFormChanges(setFacultyController, event.target.value))}
+                            MenuProps={{
+                                classes: {
+                                    paper: classes.facultyListDropdown
+                                }
+                            }}
+                            style={{
+                                width: '20%',
+                            }}>
+                        {props.facultyList.map(faculty => (
+                            <MenuItem value={faculty.id}>{faculty.facultyName}</MenuItem>
+                        ))}
+                    </Select>
+                    <FormHelperText>{isShowError(facultyController) ? 'This field is required' : ''}</FormHelperText>
+                </FormControl>
+            );
+        }
+        return <div></div>;
+    }
+
+    const setEmailErrorHelperText = (): string => {
+        if (emailController.isRequiredError) {
+            return 'This field is required';
+        } else if (emailController.isInvalidFormat) {
+            return 'Invalid email format';
+        }
+        return '';
+    }
+
     useEffect(() => {
         setFormFieldValue();
     }, [props.accountInfo])
 
     return (
-        <Dialog open={props.isOpenDialog} fullWidth={true}>
+        <Dialog open={props.isOpenDialog}  fullWidth={true}>
             <DialogTitle>{props.title}</DialogTitle>
             <DialogContent>
                 <form
@@ -269,13 +331,14 @@ const AccountActionModal = (props) => {
                         <TextField id="email"
                                    margin="dense"
                                    fullWidth
+                                   required
                                    InputLabelProps={{
                                        shrink: true
                                    }}
-                                   error={isShowError(emailController)}
+                                   error={emailController.isRequiredError || emailController.isInvalidFormat}
                                    value={emailController.value}
                                    onChange={(event): void => (handleAddUserInputFormChanges(setEmailController, event.target.value))}
-                                   helperText={isShowError(emailController) ? "Invalid email format" : ''}
+                                   helperText={setEmailErrorHelperText()}
                                    name="email"
                                    label="Email"
                                    type="text">
@@ -286,7 +349,7 @@ const AccountActionModal = (props) => {
                         <Select label="Role"
                                 labelId="role"
                                 value={roleController.value}
-                                onChange={event => (handleAddUserInputFormChanges(setRoleController, event.target.value))}
+                                onChange={event => (handleRoleChange(event.target.value))}
                                 MenuProps={{
                                     classes: {
                                         paper: classes.roleListDropdown
@@ -301,26 +364,27 @@ const AccountActionModal = (props) => {
                         </Select>
                         <FormHelperText>{isShowError(roleController) ? 'This field is required' : ''}</FormHelperText>
                     </FormControl>
-                    <FormControl error={isShowError(facultyController)}>
-                        <InputLabel required id="faculty" shrink>Faculty</InputLabel>
-                        <Select label="Faculty"
-                                id="faculty"
-                                value={facultyController.value}
-                                onChange={event => (handleAddUserInputFormChanges(setFacultyController, event.target.value))}
-                                MenuProps={{
-                                    classes: {
-                                        paper: classes.facultyListDropdown
-                                    }
-                                }}
-                                style={{
-                                    width: '20%',
-                                }}>
-                            {props.facultyList.map(faculty => (
-                                <MenuItem value={faculty.id}>{faculty.facultyName}</MenuItem>
-                            ))}
-                        </Select>
-                        <FormHelperText>{isShowError(facultyController) ? 'This field is required' : ''}</FormHelperText>
-                    </FormControl>
+                    {(!isDropdownValueIsNull(roleController) && !isAddingAdminOrContentAdminAccount()) ?
+                        (<FormControl error={isShowError(facultyController)}>
+                            <InputLabel required id="faculty" shrink>Faculty</InputLabel>
+                            <Select label="Faculty"
+                                    id="faculty"
+                                    value={facultyController.value}
+                                    onChange={event => (handleAddUserInputFormChanges(setFacultyController, event.target.value))}
+                                    MenuProps={{
+                                        classes: {
+                                            paper: classes.facultyListDropdown
+                                        }
+                                    }}
+                                    style={{
+                                        width: '20%',
+                                    }}>
+                                {props.facultyList.map(faculty => (
+                                    <MenuItem value={faculty.id}>{faculty.facultyName}</MenuItem>
+                                ))}
+                            </Select>
+                            <FormHelperText>{isShowError(facultyController) ? 'This field is required' : ''}</FormHelperText>
+                        </FormControl>) : <div></div>}
                 </form>
             </DialogContent>
             <DialogActions>
@@ -328,7 +392,7 @@ const AccountActionModal = (props) => {
                 <Button variant="contained" onClick={onSubmitForm} color="primary">Save</Button>
             </DialogActions>
         </Dialog>
-    )
+    );
 }
 
 export default AccountActionModal

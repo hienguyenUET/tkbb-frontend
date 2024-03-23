@@ -2,7 +2,14 @@ import {A} from 'hookrouter'
 import React, {useContext, useEffect, useState} from "react";
 import * as UserManagementClient from '../../api/user-management'
 import {AuthContext} from "../../auth/auth_context";
-import {DataGrid, GridCellParams, GridColDef, GridRowParams, GridRowProps} from "@material-ui/data-grid";
+import {
+    DataGrid,
+    GridCellParams,
+    GridColDef,
+    GridRowParams,
+    GridRowProps,
+    GridSelectionModel
+} from "@material-ui/data-grid";
 import IconButton from "@material-ui/core/IconButton";
 import {Delete, Edit, MoreVert, Refresh} from "@material-ui/icons";
 import {Dialog, DialogContent, DialogTitle, Menu, MenuItem} from "@material-ui/core";
@@ -25,8 +32,10 @@ export default function UserManagement() {
         }, onCancelAction: () => {
         },
     });
+    const [rowSelectionModel, setRowSelectionModel] = useState([]);
+    const [rowSelectionCount, setRowSelectionCount] = useState(0);
     const [anchorEl, setAnchorEl] = useState(null);
-    let [showError, setShowError] = useState(false);
+    const [showError, setShowError] = useState(false);
     const [rows, setRows] = useState([])
     const authContext = useContext(AuthContext)
     const columns: GridColDef[] = [{
@@ -73,55 +82,55 @@ export default function UserManagement() {
             width: 100,
             sortable: false,
             renderCell: (params: GridCellParams): void => (params.row.id !== authContext.getUserData().id ? (<div>
-                    <IconButton aria-haspopup="true"
-                                aria-controls="menu-list-grow"
-                                aria-label="more"
-                                onClick={(event) => handleClick(event, params)}>
-                        <MoreVert/>
-                    </IconButton>
-                    <Menu anchor-id="menu-list-grow"
-                          anchorEl={anchorEl}
-                          onClose={handleClose}
-                          open={Boolean(anchorEl)}>
-                        <MenuItem onClick={(event): void => {
-                            editAccountInfo(event)
-                        }} style={{
-                            display: 'flex', gap: '16px'
+                <IconButton aria-haspopup="true"
+                            aria-controls="menu-list-grow"
+                            aria-label="more"
+                            onClick={(event) => handleClick(event, params)}>
+                    <MoreVert/>
+                </IconButton>
+                <Menu anchor-id="menu-list-grow"
+                      anchorEl={anchorEl}
+                      onClose={handleClose}
+                      open={Boolean(anchorEl)}>
+                    <MenuItem onClick={(event): void => {
+                        editAccountInfo(event)
+                    }} style={{
+                        display: 'flex', gap: '16px'
+                    }}>
+                        <Edit/>
+                        Edit
+                    </MenuItem>
+                    <MenuItem onClick={openResetPasswordDialog} style={{
+                        display: 'flex', gap: '16px'
+                    }}>
+                        <Refresh/>
+                        Reset Password
+                    </MenuItem>
+                    <MenuItem onClick={openDeleteDialog} style={{
+                        display: 'flex', gap: '16px'
+                    }}>
+                        <Delete/>
+                        Delete
+                    </MenuItem>
+                </Menu>
+                <Dialog open={isOpenActionConfirmDialog}
+                        keepMounted>
+                    <DialogTitle>{dialogElement.title}</DialogTitle>
+                    <DialogContent>
+                        <div>
+                            {dialogElement.content}
+                        </div>
+                        <div style={{
+                            display: 'flex', justifyContent: 'flex-end', gap: '16px', marginTop: '16px'
                         }}>
-                            <Edit/>
-                            Edit
-                        </MenuItem>
-                        <MenuItem onClick={openResetPasswordDialog} style={{
-                            display: 'flex', gap: '16px'
-                        }}>
-                            <Refresh/>
-                            Reset Password
-                        </MenuItem>
-                        <MenuItem onClick={openDeleteDialog} style={{
-                            display: 'flex', gap: '16px'
-                        }}>
-                            <Delete/>
-                            Delete
-                        </MenuItem>
-                    </Menu>
-                    <Dialog open={isOpenActionConfirmDialog}
-                            keepMounted>
-                        <DialogTitle>{dialogElement.title}</DialogTitle>
-                        <DialogContent>
-                            <div>
-                                {dialogElement.content}
-                            </div>
-                            <div style={{
-                                display: 'flex', justifyContent: 'flex-end', gap: '16px', marginTop: '16px'
-                            }}>
-                                <button className="btn btn-secondary"
-                                        onClick={dialogElement.onCancelAction}>Cancel
-                                </button>
-                                <button className="btn btn-danger" onClick={dialogElement.onOkAction}>OK</button>
-                            </div>
-                        </DialogContent>
-                    </Dialog>
-                </div>) : <div></div>)
+                            <button className="btn btn-secondary"
+                                    onClick={dialogElement.onCancelAction}>Cancel
+                            </button>
+                            <button className="btn btn-danger" onClick={dialogElement.onOkAction}>OK</button>
+                        </div>
+                    </DialogContent>
+                </Dialog>
+            </div>) : <div></div>)
         }];
 
     const openDeleteDialog = (event): void => {
@@ -263,6 +272,36 @@ export default function UserManagement() {
         getAccountList().then(accountListResponse => mapDataRow(accountListResponse));
     }
 
+    const openDeleteMultipleAccountsConfirmDialog = () => {
+        setOpenActionConfirmDialog(true);
+        setDialogElement({
+            title: 'Delete Account',
+            content: rowSelectionModel.length === 1 ? 'Are you sure to delete this account?' : 'Are you sure to delete these accounts?',
+            onOkAction: deleteMultipleAccounts,
+            onCancelAction: closeActionConfirmDialog
+        })
+    }
+
+    const deleteMultipleAccounts = () => {
+        setOpenActionConfirmDialog(false);
+        if (rowSelectionModel.length > 0) {
+            UserManagementClient.deleteMultipleAccounts(rowSelectionModel.join(',')).then(response => {
+                if (response === 200) {
+                    getAccountList().then(accountListResponse => mapDataRow(accountListResponse));
+                    handleRowSelection([]);
+                    setAnchorEl(null);
+                } else {
+                    setShowError(true);
+                }
+            })
+        }
+    }
+
+    const handleRowSelection = (newSelectionModel: GridSelectionModel): void => {
+        setRowSelectionModel(newSelectionModel);
+        setRowSelectionCount(newSelectionModel.length);
+    }
+
     useEffect(() => {
         getAccountList().then(accountListResponse => mapDataRow(accountListResponse));
         getFacultyList().then(facultyListResponse => setFacultyList(facultyListResponse));
@@ -270,51 +309,57 @@ export default function UserManagement() {
     }, [])
 
     return (<div className="content-wrapper">
-            <div className="content-header">
-                <div className="container-fluid">
-                    <div className="row mb-2">
-                        <div className="col-sm-6">
-                            <h1 className="m-0">User Management {showError}</h1>
-                        </div>
-                        <div className="col-sm-6">
-                            <ol className="breadcrumb float-sm-right nav-links">
-                                <li className="breadcrumb-item"><A href="/public">Home</A></li>
-                                <li className="breadcrumb-item active">User Management</li>
-                            </ol>
-                        </div>
+        <div className="content-header">
+            <div className="container-fluid">
+                <div className="row mb-2">
+                    <div className="col-sm-6">
+                        <h1 className="m-0">User Management {showError}</h1>
+                    </div>
+                    <div className="col-sm-6">
+                        <ol className="breadcrumb float-sm-right nav-links">
+                            <li className="breadcrumb-item"><A href="/public">Home</A></li>
+                            <li className="breadcrumb-item active">User Management</li>
+                        </ol>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <section className="content">
-                <div className="container-fluid">
-                    <div className="d-flex justify-content-between align-items-center m-1">
-                        <div style={{height: 700, width: '100%', backgroundColor: '#fff'}}>
-                            <DataGrid
-                                rows={rows}
-                                columns={columns}
-                                pageSize={10}
-                                checkboxSelection
-                                isRowSelectable={(params: GridRowParams): void => (params.id !== authContext.getUserData().id)}
-                                disableSelectionOnClick
-                                components={{Toolbar: CustomToolbar}}
-                                componentsProps={{
-                                    toolbar: {
-                                        handleActionSuccess, facultyList, roleList
-                                    }
-                                }}
-                            />
-                            <AccountActionModal facultyList={facultyList && facultyList.data ? facultyList.data : []}
-                                                title={"Edit Account Info"}
-                                                actionType={"edit"}
-                                                accountInfo={accountInfoForAction}
-                                                handleActionSuccess={handleActionSuccess}
-                                                roleList={roleList && roleList.data ? roleList.data : []}
-                                                isOpenDialog={isOpenEditDialog}
-                                                closeDialog={closeDialog}/>
-                        </div>
+        <section className="content">
+            <div className="container-fluid">
+                <div className="d-flex justify-content-between align-items-center m-1">
+                    <div style={{height: 700, width: '100%', backgroundColor: '#fff'}}>
+                        <DataGrid
+                            rows={rows}
+                            columns={columns}
+                            pageSize={10}
+                            selectionModel={rowSelectionModel}
+                            onSelectionModelChange={handleRowSelection}
+                            checkboxSelection
+                            isRowSelectable={(params: GridRowParams): void => (params.id !== authContext.getUserData().id)}
+                            disableSelectionOnClick
+                            components={{Toolbar: CustomToolbar}}
+                            componentsProps={{
+                                toolbar: {
+                                    handleActionSuccess,
+                                    openDeleteMultipleAccountsConfirmDialog,
+                                    facultyList,
+                                    rowSelectionCount,
+                                    roleList
+                                }
+                            }}
+                        />
+                        <AccountActionModal facultyList={facultyList && facultyList.data ? facultyList.data : []}
+                                            title={"Edit Account Info"}
+                                            actionType={"edit"}
+                                            accountInfo={accountInfoForAction}
+                                            handleActionSuccess={handleActionSuccess}
+                                            roleList={roleList && roleList.data ? roleList.data : []}
+                                            isOpenDialog={isOpenEditDialog}
+                                            closeDialog={closeDialog}/>
                     </div>
                 </div>
-            </section>
-        </div>)
+            </div>
+        </section>
+    </div>)
 }

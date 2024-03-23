@@ -44,3 +44,14 @@
 .job-queue-show {
   height: unset;
 }
+
+.delete-button {
+  display: flex;
+  background-color: #fce0e0;
+  color: red;
+  margin: 8px
+}
+
+.delete-button:disabled {
+  opacity: 0.5;
+}

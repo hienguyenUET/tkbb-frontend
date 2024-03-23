@@ -25,6 +25,11 @@ export const deleteAccount = async (id): Promise<any> => {
     return response;
 }
 
+export const deleteMultipleAccounts = async (ids): Promise<any> => {
+    const {status: response} = await api.delete(`/api/v1/${ROUTE_LINK}/delete-multiple-account/${ids}`);
+    return response;
+}
+
 export const getRoleList = async () => {
     const {data: response} = await api.get(`/api/v1/${ROUTE_LINK}/role/search`);
 
