@@ -18,6 +18,7 @@ const Interceptor = ({ children }) => {
 			loadingToastId = toast.info('Loading...', {
 				toastId: 0
 			})
+			console.log(request);
 			return request
 		}
 	)
