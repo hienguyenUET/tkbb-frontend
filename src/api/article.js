@@ -26,7 +26,7 @@ const getArticles = async () => {
 const updateArticles = async (body, id) => {
     const { data: response } = await api.put(`/api/v1/articles/${id}`, body)
 
-    toast.success("Update diachicongbo for article successfully", { autoClose: 3000 })
+    // toast.success("Update diachicongbo for article successfully", { autoClose: 3000 })
 
     return response
 }

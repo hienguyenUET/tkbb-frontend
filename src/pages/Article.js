@@ -102,7 +102,6 @@ const Article = () => {
             authorCnt: r.authors.split(',').length,
             researchHours: r.category.researchHours
         }));
-        // console.log(dataRows);
         setArticles(dataRows);
         setRows(dataRows);
     }
@@ -134,6 +133,14 @@ const Article = () => {
         border: '1px solid #080',
     }
 
+    const toggleAuthorType = (params, authorFieldName) => {
+        let row = rows.find(r => r.id === params.row.id);
+        row[authorFieldName] = !params.row[authorFieldName];
+        updateArticles({[authorFieldName]: row[authorFieldName]}, params.row.id).then(() => {
+            setRows(rows.map(r => r));
+        })
+    }
+
     const columns = [
         {field: 'id', headerName: 'ID', width: 70},
         {
@@ -142,11 +149,45 @@ const Article = () => {
             width: 180
         },
         {
+            field: 'isFirstAuthor',
+            headerName: 'First Author',
+            sortable: false,
+            renderCell: (params) => {
+                return (
+                    <IconButton
+                        onClick={() => toggleAuthorType(params, 'isFirstAuthor')}
+                        style={getRowValue(params, 'isFirstAuthor') ? {color: "green"} : {color: "#ccc"}}>
+                        <CheckIcon/>
+                    </IconButton>
+                )
+            }
+        },
+        {
+            field: 'isCorrespondingAuthor',
+            headerName: 'Corresponding Author',
+            sortable: false,
+            width: 200,
+            renderCell: (params) => {
+                return (
+                    <div style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}>
+                        <IconButton
+                            onClick={() => toggleAuthorType(params, 'isCorrespondingAuthor')}
+                            style={getRowValue(params, 'isCorrespondingAuthor') ? {color: "green"} : {color: "#ccc"}}>
+                            <CheckIcon/>
+                        </IconButton>
+                    </div>
+                )
+            }
+        },
+        {
             field: 'title',
             headerName: 'Title',
             width: 260,
             renderCell: (params) => {
-                console.log(params)
                 return (
                     <div>
                         <IconButton onClick={() => {
@@ -303,10 +344,10 @@ const Article = () => {
             width: 150,
             renderCell: (params) => (
                 <div>
-                    <IconButton color="primary" onClick={() => handleRefreshArticle(getRowValue(params,'id'))}>
+                    <IconButton color="primary" onClick={() => handleRefreshArticle(getRowValue(params, 'id'))}>
                         <CachedOutlinedIcon/>
                     </IconButton>
-                    <IconButton color="secondary" onClick={() => handleDeleteArticle(getRowValue(params,'id'))}>
+                    <IconButton color="secondary" onClick={() => handleDeleteArticle(getRowValue(params, 'id'))}>
                         <DeleteIcon/>
                     </IconButton>
                 </div>
