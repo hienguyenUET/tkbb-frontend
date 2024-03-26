@@ -222,34 +222,6 @@ const AccountActionModal = (props) => {
         handleAddUserInputFormChanges(setRoleController, newValue);
     }
 
-    const renderFacultyDropdown = (): JSX.Element => {
-        if (!isAddingAdminOrContentAdminAccount()) {
-            return (
-                <FormControl error={isShowError(facultyController)}>
-                    <InputLabel required id="faculty" shrink>Faculty</InputLabel>
-                    <Select label="Faculty"
-                            id="faculty"
-                            value={facultyController.value}
-                            onChange={event => (handleAddUserInputFormChanges(setFacultyController, event.target.value))}
-                            MenuProps={{
-                                classes: {
-                                    paper: classes.facultyListDropdown
-                                }
-                            }}
-                            style={{
-                                width: '20%',
-                            }}>
-                        {props.facultyList.map(faculty => (
-                            <MenuItem value={faculty.id}>{faculty.facultyName}</MenuItem>
-                        ))}
-                    </Select>
-                    <FormHelperText>{isShowError(facultyController) ? 'This field is required' : ''}</FormHelperText>
-                </FormControl>
-            );
-        }
-        return <div></div>;
-    }
-
     const setEmailErrorHelperText = (): string => {
         if (emailController.isRequiredError) {
             return 'This field is required';
@@ -264,7 +236,7 @@ const AccountActionModal = (props) => {
     }, [props.accountInfo])
 
     return (
-        <Dialog open={props.isOpenDialog}  fullWidth={true}>
+        <Dialog open={props.isOpenDialog} fullWidth={true}>
             <DialogTitle>{props.title}</DialogTitle>
             <DialogContent>
                 <form
@@ -292,24 +264,6 @@ const AccountActionModal = (props) => {
                                    type="text">
                         </TextField>
                     </FormControl>
-                    {/*<FormControl>*/}
-                    {/*    <TextField required*/}
-                    {/*               id="password"*/}
-                    {/*               margin="dense"*/}
-                    {/*               error={isShowError(passwordController)}*/}
-                    {/*               value={passwordController.value}*/}
-                    {/*               InputLabelProps={{*/}
-                    {/*                   shrink: true*/}
-                    {/*               }}*/}
-                    {/*               fullWidth*/}
-                    {/*               autoComplete={"new-password"}*/}
-                    {/*               onChange={(event): void => (handleAddUserInputFormChanges(setPasswordController, event.target.value))}*/}
-                    {/*               helperText={isShowError(passwordController) ? "This field is required" : ''}*/}
-                    {/*               name="password"*/}
-                    {/*               label="Password"*/}
-                    {/*               type="password">*/}
-                    {/*    </TextField>*/}
-                    {/*</FormControl>*/}
                     <FormControl>
                         <TextField required
                                    id="name"

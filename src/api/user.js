@@ -41,8 +41,8 @@ const updateUser = async (id, user) => {
 }
 
 const deleteUser = async (uid) => {
+    // console.log(uid);
     const { data: response } = await api.delete(`/api/v1/users/${uid}`)
-
     return response
 }
 
