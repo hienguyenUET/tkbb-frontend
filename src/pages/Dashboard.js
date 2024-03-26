@@ -373,9 +373,9 @@ const Dashboard = props => {
                                 columns={userColumns}
                                 pageSize={30}
                                 filterModel={filterModel}
-                                onFilterModelChange={(params) => {
-                                    params.api.setPage(0);
-                                }}
+                                // onFilterModelChange={(params) => {
+                                //     // params.api.setPage(0);
+                                // }}
                                 clearFilterFn={() => {
                                     requestSearch('');
                                     setFilterModel({items: []})

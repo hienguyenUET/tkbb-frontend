@@ -36,9 +36,12 @@ export default function ScholarDataGrid(props) {
       rows={props.rows}
       pageSize={props.pageSize}
       page={props.page}
-      onFilterModelChange={props.onFilterModelChange}
+      // onFilterModelChange={(params) => {
+      //     console.log(params);
+      //     props.onFilterModelChange()
+      // }}
       onEditCellChangeCommitted={props.onEditCellChangeCommitted}
-      filterModel={props.filterModel}
+      // filterModel={props.filterModel}
       components={{ Toolbar: GridToolbar, Pagination: CustomPagination }}
       componentsProps={{ toolbar: {
         clearSearchText: props.clearSearchTextFn,
