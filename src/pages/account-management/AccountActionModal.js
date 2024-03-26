@@ -11,7 +11,7 @@ import {
     TextField
 } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-import * as UserManagementClient from "../../api/user-management";
+import * as UserManagementClient from "../../api/account-management.js";
 import {useEffect, useState} from "react";
 import {makeStyles} from "@material-ui/styles";
 

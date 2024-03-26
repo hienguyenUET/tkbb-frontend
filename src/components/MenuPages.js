@@ -132,7 +132,7 @@ export const theoDoiLayDuLieuPage = () => {
 
 export const quanLyNguoiDungPage = () => {
 	return <li className="nav-item">
-		<A href="/user-management" className="nav-link">
+		<A href="/account-management" className="nav-link">
 			<i className="nav-icon fas fa-user"/>
 			<p>Quản lý người dùng</p>
 		</A>

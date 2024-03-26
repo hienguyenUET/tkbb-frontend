@@ -20,7 +20,7 @@ import Scholars from './pages/Scholars'
 import { AuthProvider } from './auth/auth_context'
 import { useRoutes, usePath } from 'hookrouter'
 import Home from './components/Home';
-import UserManagement from "./pages/user-management/UserManagement";
+import AccountManagement from "./pages/account-management/AccountManagement";
 
 const routes = {
   '/': () => <Yearly />,
@@ -39,7 +39,7 @@ const routes = {
   '/paperlist': () => <PaperList />,
   '/scholars': () => <Scholars />,
   '/login': () => <Login />,
-  '/user-management': () => <UserManagement/>
+  '/account-management': () => <AccountManagement/>
 }
 
 const App = () => {

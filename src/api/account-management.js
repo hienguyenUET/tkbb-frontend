@@ -1,6 +1,6 @@
 import api from "../auth/api-setup";
 
-const ROUTE_LINK = 'user-management'
+const ROUTE_LINK = 'account-management'
 
 export const getAccountList = async () => {
     const {data: response} = await api.get(`/api/v1/${ROUTE_LINK}/search`);

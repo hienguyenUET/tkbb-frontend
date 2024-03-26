@@ -1,6 +1,6 @@
 import {A} from 'hookrouter'
 import React, {useContext, useEffect, useState} from "react";
-import * as UserManagementClient from '../../api/user-management'
+import * as UserManagementClient from '../../api/account-management'
 import {AuthContext} from "../../auth/auth_context";
 import {
     DataGrid,
@@ -21,7 +21,7 @@ import {Slide} from "react-toastify";
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
-export default function UserManagement() {
+export default function AccountManagement() {
     const [facultyList, setFacultyList] = useState([]);
     const [roleList, setRoleList] = useState([]);
     const [accountInfoForAction, setAccountInfoForAction] = useState(null);
