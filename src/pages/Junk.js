@@ -19,6 +19,10 @@ const Junk = () => {
     setRows(rows);
   }
 
+  const getParamValue = (params, name) => {
+    return params.row[name];
+  }
+
   const columns = [
     { field: 'id', headerName: 'Citation', width: 120 },
     {
@@ -29,7 +33,7 @@ const Junk = () => {
       renderCell: (params) => {
         return (
           <div>
-            {params.getValue('fullName')}
+            {getParamValue(params,'fullName')}
           </div>
         )
       },
@@ -41,8 +45,8 @@ const Junk = () => {
       editable: true,
       renderCell: (params) => {
         return (
-          <div title={params.getValue('title')}>
-            {params.getValue('title')}
+          <div title={getParamValue(params,'title')}>
+            {getParamValue(params,'title')}
           </div>
         )
       },
@@ -54,8 +58,8 @@ const Junk = () => {
       editable: true,
       renderCell: (params) => {
         return (
-          <div title={params.getValue('error')}>
-            {params.getValue('error')}
+          <div title={getParamValue(params,'error')}>
+            {getParamValue(params,'error')}
           </div>
         )
       },
@@ -69,13 +73,13 @@ const Junk = () => {
         return (
           <div>
             <IconButton color="primary"
-              onClick={() => window.open(citationLink(params.getValue('citation'), params.getValue('user')), "_blank")}>
+              onClick={() => window.open(citationLink(getParamValue(params,'citation'), params.getValue('user')), "_blank")}>
               <FindInPageOutlined />
             </IconButton>
             <IconButton
               color="secondary"
               onClick={async () => {
-                await deleteJunk(params.getValue('citation'));
+                await deleteJunk(getParamValue(params,'citation'));
                 await reloadTable();
               }}
             >
