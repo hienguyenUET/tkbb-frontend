@@ -11,8 +11,8 @@ const CustomToolbar = (props) => {
     const [facultyList, setFacultyList] = useState([]);
     const [roleList, setRoleList] = useState([]);
     const [isOpenDialog: boolean, setOpenDialog] = useState(false);
-    const [addAccountMenuAnchorEl, setAddAccountMenuAnchorEl] = useState(null);
-    const [isOpenAddAccountMenu: boolean, setOpenAddAccountMenu] = useState(false);
+    // const [addAccountMenuAnchorEl, setAddAccountMenuAnchorEl] = useState(null);
+    // const [isOpenAddAccountMenu: boolean, setOpenAddAccountMenu] = useState(false);
     const openDialog = (): void => {
         setOpenDialog(true);
     }
@@ -34,15 +34,16 @@ const CustomToolbar = (props) => {
         display: 'flex', backgroundColor: '#fce0e0', color: "red", margin: '8px', opacity: 0.5
     }
 
-    const openAddAccountMenu = (event: React.MouseEvent<HTMLButtonElement>): void => {
-        // setOpenAddAccountMenu(true);
-        setAddAccountMenuAnchorEl(event.currentTarget);
-    }
+    // const openAddAccountMenu = (event: React.MouseEvent<HTMLButtonElement>): void => {
+    //     console.log(event)
+    //     // setOpenAddAccountMenu(true);
+    //     setAddAccountMenuAnchorEl(event.currentTarget);
+    // }
 
-    const closeAddAccountMenu = (): void => {
-        // setOpenAddAccountMenu(false);
-        setAddAccountMenuAnchorEl(null);
-    }
+    // const closeAddAccountMenu = (): void => {
+    //     // setOpenAddAccountMenu(false);
+    //     setAddAccountMenuAnchorEl(null);
+    // }
 
     useEffect((): void => {
         setFacultyList(props.facultyList && props.facultyList.data ? props.facultyList.data : []);
@@ -59,40 +60,52 @@ const CustomToolbar = (props) => {
                     <Button style={addUserButton}
                             type="button"
                             id="add-account-button"
-                            onClick={openAddAccountMenu}
-                            aria-controls={Boolean(addAccountMenuAnchorEl) ? 'add-account-menu' : undefined}
-                            aria-haspopup="true"
-                            aria-expanded={Boolean(addAccountMenuAnchorEl) ? 'true' : undefined}
+                            onClick={openDialog}
+                            // onClick={openAddAccountMenu}
+                            // aria-controls={Boolean(addAccountMenuAnchorEl) ? 'add-account-menu' : undefined}
+                            // aria-haspopup="true"
+                            // aria-expanded={Boolean(addAccountMenuAnchorEl) ? 'true' : undefined}
                             startIcon={<AddIcon></AddIcon>}
                             variant="contained">
                         <span>Add User</span>
                     </Button>
-                    <Menu id="add-account-menu"
-                          anchorEl={addAccountMenuAnchorEl}
-                          MenuListProps={{
-                              'aria-labelledby': 'add-account-button',
-                          }}
-                          onClose={closeAddAccountMenu}
-                          open={Boolean(addAccountMenuAnchorEl)}>
-                        <MenuItem style={{
-                            display: 'flex', gap: '16px'
-                        }}>
-                            <Edit/>
-                            Admin/Content Admin
-                        </MenuItem>
-                        <MenuItem style={{
-                            display: 'flex', gap: '16px'
-                        }}>
-                            <Edit/>
-                            Department
-                        </MenuItem>
-                        <MenuItem style={{
-                            display: 'flex', gap: '16px'
-                        }}>
-                            <Refresh/>
-                            Researcher
-                        </MenuItem>
-                    </Menu>
+                    {/*<Menu id="add-account-menu"*/}
+                    {/*      // style={{*/}
+                    {/*      //     marginTop: '32px'*/}
+                    {/*      // }}*/}
+                    {/*      anchorEl={addAccountMenuAnchorEl}*/}
+                    {/*      anchorOrigin={{*/}
+                    {/*          vertical: 'bottom',*/}
+                    {/*          horizontal: 'right',*/}
+                    {/*      }}*/}
+                    {/*      transformOrigin={{*/}
+                    {/*          vertical: 'bottom',*/}
+                    {/*          horizontal: 'right',*/}
+                    {/*      }}*/}
+                    {/*      MenuListProps={{*/}
+                    {/*          'aria-labelledby': 'add-account-button',*/}
+                    {/*      }}*/}
+                    {/*      onClose={closeAddAccountMenu}*/}
+                    {/*      open={Boolean(addAccountMenuAnchorEl)}>*/}
+                    {/*    <MenuItem style={{*/}
+                    {/*        display: 'flex', gap: '16px'*/}
+                    {/*    }}>*/}
+                    {/*        <Edit/>*/}
+                    {/*        Admin/Content Admin*/}
+                    {/*    </MenuItem>*/}
+                    {/*    <MenuItem style={{*/}
+                    {/*        display: 'flex', gap: '16px'*/}
+                    {/*    }}>*/}
+                    {/*        <Edit/>*/}
+                    {/*        Department*/}
+                    {/*    </MenuItem>*/}
+                    {/*    <MenuItem style={{*/}
+                    {/*        display: 'flex', gap: '16px'*/}
+                    {/*    }}>*/}
+                    {/*        <Refresh/>*/}
+                    {/*        Researcher*/}
+                    {/*    </MenuItem>*/}
+                    {/*</Menu>*/}
                     <AccountActionModal isOpenDialog={isOpenDialog}
                                         facultyList={facultyList}
                                         title={"Add New Account"}
