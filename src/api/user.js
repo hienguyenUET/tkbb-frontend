@@ -12,6 +12,12 @@ const getUsers = async () => {
     return response;
 }
 
+const getUserListForAddAccount = async () => {
+    const { data: response } = await api.get('/api/v1/users/search/add-account')
+
+    return response;
+}
+
 const uploadUsers = async (file) => {
 
     const formData = new FormData()
@@ -50,6 +56,7 @@ export {
     createUsers,
     getUsers,
     uploadUsers,
+    getUserListForAddAccount,
     crawlUsers,
     updateUser,
     deleteUser

@@ -69,8 +69,6 @@ export default function AccountManagement() {
         //     )
         // },
         {
-            field: 'email', headerName: 'Email', flex: true,
-        }, {
             field: 'name', headerName: 'Name', flex: true,
         }, {
             field: 'role', headerName: 'Role', flex: true

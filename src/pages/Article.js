@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import {A} from 'hookrouter'
 import toast from '../toast'
 import DataGrid from '../components/DataGrid';
@@ -10,6 +10,7 @@ import IconButton from '@material-ui/core/IconButton'
 import {getCategories} from '../api/category'
 import {deleteArticle, getArticles, reloadArticle, updateArticles} from '../api/article';
 import {findJournal} from '../api/jounal';
+import {AuthContext} from "../auth/auth_context";
 
 const Article = () => {
     let [articles, setArticles] = useState([]);
@@ -19,7 +20,7 @@ const Article = () => {
     let [confirmedCond, setConfirmedCond] = useState(false);
     let [classifiedCond, setClassifiedCond] = useState(false);
     let [allCond, setAllCond] = useState(true);
-
+    const authContext = useContext(AuthContext);
     let [categories, setCategories] = useState([]);
 
     const checkPublication = async (venue) => {
@@ -141,6 +142,10 @@ const Article = () => {
         })
     }
 
+    const isEditableRow = (params): boolean => {
+        return params.row["account_id"] === authContext.getUserData().id;
+    }
+
     const columns = [
         {field: 'id', headerName: 'ID', width: 70},
         {
@@ -155,7 +160,10 @@ const Article = () => {
             renderCell: (params) => {
                 return (
                     <IconButton
-                        onClick={() => toggleAuthorType(params, 'isFirstAuthor')}
+                        onClick={() => {
+                            toggleAuthorType(params, 'isFirstAuthor')
+                            console.log(params)
+                        }}
                         style={getRowValue(params, 'isFirstAuthor') ? {color: "green"} : {color: "#ccc"}}>
                         <CheckIcon/>
                     </IconButton>
