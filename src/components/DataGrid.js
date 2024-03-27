@@ -1,4 +1,4 @@
-import {DataGrid, GridRowParams, useGridSlotComponentProps} from '@material-ui/data-grid'
+import {DataGrid, useGridSlotComponentProps} from '@material-ui/data-grid'
 import {makeStyles} from '@material-ui/styles'
 import GridToolbar from './GridToolbar';
 import Pagination from '@material-ui/lab/Pagination';
@@ -32,17 +32,13 @@ function CustomPagination() {
 }
 
 export default function MyDataGrid(props) {
-
-    const authContext = useContext(AuthContext);
     return (
         <DataGrid
             columns={props.columns}
             rows={props.rows}
             pageSize={props.pageSize}
             page={props.page}
-            isCellEditable={(params):void => (
-                 params.row.account_id === authContext.getUserData().id
-            )}
+            disableSelectionOnClick={true}
             onFilterModelChange={props.onFilterModelChange}
             onEditCellChangeCommitted={props.onEditCellChangeCommitted}
             filterModel={props.filterModel}

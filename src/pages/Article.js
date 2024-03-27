@@ -143,7 +143,7 @@ const Article = () => {
     }
 
     const isEditableRow = (params): boolean => {
-        return params.row["account_id"] === authContext.getUserData().id;
+        return params.row.user["account_id"] === authContext.getUserData().id;
     }
 
     const columns = [
@@ -160,9 +160,9 @@ const Article = () => {
             renderCell: (params) => {
                 return (
                     <IconButton
+                        disabled={!isEditableRow(params)}
                         onClick={() => {
                             toggleAuthorType(params, 'isFirstAuthor')
-                            console.log(params)
                         }}
                         style={getRowValue(params, 'isFirstAuthor') ? {color: "green"} : {color: "#ccc"}}>
                         <CheckIcon/>
@@ -183,6 +183,7 @@ const Article = () => {
                         alignItems: "center",
                     }}>
                         <IconButton
+                            disabled={!isEditableRow(params)}
                             onClick={() => toggleAuthorType(params, 'isCorrespondingAuthor')}
                             style={getRowValue(params, 'isCorrespondingAuthor') ? {color: "green"} : {color: "#ccc"}}>
                             <CheckIcon/>
@@ -234,10 +235,11 @@ const Article = () => {
                         height: '80%',
                         color: params.row.classified ? 'green' : 'red'
                     }}
+                            disabled={!isEditableRow(params)}
                             data-params_id={params.row.id}
                             value={params.row.categoryId}
                             onChange={categoryChanged}>
-                        {categories.map(c => (<option value={c.id}>{c.name}</option>))}
+                        {categories.map(c => (<option value={c.id} disabled={!isEditableRow(params)}>{c.name}</option>))}
                     </select>
                 )
             },
@@ -261,6 +263,7 @@ const Article = () => {
             renderCell: (params) => {
                 return (
                     <IconButton
+                        disabled={!isEditableRow(params)}
                         onClick={() => toggleConfirm(getRowValue(params, 'id'), getRowValue(params, 'classified'))}
                         style={getRowValue(params, 'classified') ? {color: "green"} : {color: "#ccc"}}>
                         <CheckIcon/>
@@ -270,14 +273,14 @@ const Article = () => {
         },
         {
             field: 'publicationDate',
-            editable: true,
+            // editable: true,
             headerName: 'Publication Date',
             width: 140
         },
         {
             field: 'venue',
             headerName: 'Publication',
-            editable: true,
+            // editable: true,
             width: 650,
             renderCell: (params) => {
                 return (
@@ -352,10 +355,14 @@ const Article = () => {
             width: 150,
             renderCell: (params) => (
                 <div>
-                    <IconButton color="primary" onClick={() => handleRefreshArticle(getRowValue(params, 'id'))}>
+                    <IconButton color="primary"
+                                disabled={!isEditableRow(params)}
+                                onClick={() => handleRefreshArticle(getRowValue(params, 'id'))}>
                         <CachedOutlinedIcon/>
                     </IconButton>
-                    <IconButton color="secondary" onClick={() => handleDeleteArticle(getRowValue(params, 'id'))}>
+                    <IconButton color="secondary"
+                                disabled={!isEditableRow(params)}
+                                onClick={() => handleDeleteArticle(getRowValue(params, 'id'))}>
                         <DeleteIcon/>
                     </IconButton>
                 </div>
