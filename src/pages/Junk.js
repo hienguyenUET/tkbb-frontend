@@ -73,7 +73,7 @@ const Junk = () => {
         return (
           <div>
             <IconButton color="primary"
-              onClick={() => window.open(citationLink(getParamValue(params,'citation'), params.getValue('user')), "_blank")}>
+              onClick={() => window.open(citationLink(getParamValue(params,'citation'), getParamValue(params, 'user')), "_blank")}>
               <FindInPageOutlined />
             </IconButton>
             <IconButton

@@ -403,14 +403,14 @@ const Article = () => {
                                     rows={rows}
                                     columns={columns}
                                     pageSize={10}
-                                    filterModel={filterModel}
-                                    onFilterModelChange={(params) => {
-                                        params.api.setPage(0);
-                                    }}
+                                    // filterModel={filterModel}
+                                    // onFilterModelChange={(params) => {
+                                    //     params.api.setPage(0);
+                                    // }}
                                     clearSearchTextFn={() => requestSearch('')}
-                                    clearFilterFn={() => {
-                                        setFilterModel({items: []})
-                                    }}
+                                    // clearFilterFn={() => {
+                                    //     setFilterModel({items: []})
+                                    //}}
                                     filterText={searchText}
                                     filterTextChangeFn={(event) => requestSearch(event.target.value)}
                                     all={allCond}

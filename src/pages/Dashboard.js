@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from 'react'
+import {useContext, useEffect, useRef, useState} from 'react'
 import {A} from 'hookrouter'
 import DataGrid from '../components/ScholarDataGrid'
 import Button from '@material-ui/core/Button'
@@ -23,6 +23,7 @@ import {
     TextField
 } from "@material-ui/core";
 import {makeStyles} from "@material-ui/styles";
+import {AuthContext} from "../auth/auth_context";
 
 const useStyles = makeStyles((theme) => ({
     facultyListDropdown: {
@@ -35,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 const Dashboard = props => {
+    const authContext = useContext(AuthContext);
     const urlRegex = /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)$/
     const [faculties, setFaculties] = useState([]);
     const classes = useStyles();
@@ -85,7 +87,7 @@ const Dashboard = props => {
     }
 
     const reloadUser = async () => {
-        const {data: users} = await getUsers()
+        const {data: users} = await getUsers(authContext.getUserData().faculty.id);
         if (showError) {
             setRows(users.filter(u => (u.crawlStatus && u.crawlStatus.length)));
             setUsers(users.filter(u => (u.crawlStatus && u.crawlStatus.length)));
