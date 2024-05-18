@@ -36,10 +36,10 @@ const Interceptor = ({ children }) => {
 			error => {
 				let message = ''
 				if (error.response) {
-					if (error.response.status === 403) {
-						authContext.logout();
-						navigate('/login');
-					}
+					// if (error.response.status === 403) {
+					// 	authContext.logout();
+					// 	navigate('/login');
+					// }
 					message = error.response.data.error.message
 				} else if (error.request) {
 					message = error.request
